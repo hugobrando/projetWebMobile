@@ -34,11 +34,17 @@ export default {
     localStorage.clear();
   },
 
-  modifyInfo: function(oldEmail, newEmail, password){
+  modifyInfo: function(email, pseudo, firstname, lastname, birthday, adress, tel){
+    const token = localStorage.getItem("token")
     return axios.patch(`${burl}/user/edit`,{
-      oldEmail,
-      newEmail,
-      password}
+      token,
+      email,
+      pseudo,
+      firstname,
+      lastname,
+      birthday,
+      adress,
+      tel}
     , { headers: headers });
   },
 

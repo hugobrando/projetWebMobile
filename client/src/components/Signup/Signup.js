@@ -70,7 +70,8 @@ export class Signup extends React.Component {
     }
     if(valide){
       try {
-        const { data } = await API.signup({ email, password, pseudo, firstname, lastname, birthday, adress, tel });
+        const token = localStorage.getItem("token")
+        const { data } = await API.signup({ token, email, password, pseudo, firstname, lastname, birthday, adress, tel });
         localStorage.setItem("token", data.token);
         localStorage.setItem("nom", data.nom);
         localStorage.setItem("prenom", data.prenom);

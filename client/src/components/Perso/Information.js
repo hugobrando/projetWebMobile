@@ -9,7 +9,6 @@ export class Information extends React.Component {
     super(props);
     this.state = {
       email: "",
-      password: "",
       pseudo: "",
       firstname: "",
       lastname: "",
@@ -48,34 +47,76 @@ export class Information extends React.Component {
       };
 
     modify = async () => {
-        const { email, password} = this.state;
+        const { email, pseudo, firstname, lastname, birthday, adress, tel } = this.state;
+        var valide = true;
         if (!email || email.length === 0){
           ReactDOM.render(
             React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir un champ !</p>),
-            document.getElementById("errorSaisie")
+            document.getElementById("emailError")
           )
-          return;
+          valide = false;
         } 
-        if (!password || password.length === 0){
+        if (!pseudo || pseudo.length === 0){
           ReactDOM.render(
-            React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir un champ !</p>),
-            document.getElementById("errorSaisie")
+            React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir votre pseudo !</p>),
+            document.getElementById("pseudoError")
           )
-          return;
-        } 
-        try {
-            const oldEmail =  localStorage.getItem("email")
-            await API.modifyInfo(oldEmail, email, password);
-            window.location = "/dashboard";
-        } catch (error) {
-            console.error(error);
+          valide = false;
+        }
+        if (!firstname || firstname.length === 0){
+          ReactDOM.render(
+            React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir votre nom !</p>),
+            document.getElementById("firstnameError")
+          )
+          valide = false;
+        }
+        if (!birthday || birthday.length === 0){
+          ReactDOM.render(
+            React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir votre date de naissance !</p>),
+            document.getElementById("birthdayError")
+          )
+          valide = false;
+        }
+        if (!adress || adress.length === 0){
+          ReactDOM.render(
+            React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir votre adresse !</p>),
+            document.getElementById("adressError")
+          )
+          valide = false;
+        }
+        if (!tel || tel.length === 0){
+          ReactDOM.render(
+            React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir votre numéro de téléphone !</p>),
+            document.getElementById("telError")
+          )
+          valide = false;
+        }
+        if(valide){ 
+          try {
+              const { data } = await API.modifyInfo(email, pseudo, firstname, lastname, birthday, adress, tel);
+              localStorage.setItem("token", data.token);
+              localStorage.setItem("nom", data.nom);
+              localStorage.setItem("prenom", data.prenom);
+              window.location = "/dashboard";
+          } catch (error) {
+              console.error(error);
+              ReactDOM.render(
+                React.createElement('div', {}, <p className="error"> {error.response.data.text} !</p>),
+                document.getElementById("errorSubmit")
+              )
+          }
         }
     };
+
+    stringToDate  = (stringDate) => {
+      var formatItems=stringDate.split("T");
+      return formatItems[0];
+    }
 
   render() {
     return (
       <div className="Dashboard">
-        <h1>Mes Information</h1>
+        <h1>Mes Informations</h1>
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
         <Button onClick={this.dasboard} block bsSize="large" type="submit">
           Go to Dashboard
@@ -91,13 +132,7 @@ export class Information extends React.Component {
                 onChange={this.handleChange}
             />
             </FormGroup>
-            <FormGroup controlId="password" bsSize="large">
-            <ControlLabel>Password</ControlLabel>
-            <FormControl
-                onChange={this.handleChange}
-                type="password"
-            />
-            </FormGroup>
+            <div id="emailError"></div>
             <FormGroup controlId="pseudo" bsSize="large">
             <ControlLabel>Pseudo</ControlLabel>
             <FormControl
@@ -106,6 +141,7 @@ export class Information extends React.Component {
                 onChange={this.handleChange}
             />
             </FormGroup>
+            <div id="pseudoError"></div>
             <FormGroup controlId="firstname" bsSize="large">
             <ControlLabel>Nom</ControlLabel>
             <FormControl
@@ -113,6 +149,7 @@ export class Information extends React.Component {
                 value={this.state.firstname}
                 onChange={this.handleChange}
             />
+            <div id="firstnameError"></div>
             </FormGroup>
             <FormGroup controlId="lastname" bsSize="large">
             <ControlLabel>Prénom</ControlLabel>
@@ -122,14 +159,16 @@ export class Information extends React.Component {
                 onChange={this.handleChange}
             />
             </FormGroup>
+            <div id="lastnameError"></div>
             <FormGroup controlId="birthday" bsSize="large">
             <ControlLabel>Date de naissance</ControlLabel>
             <FormControl
                 type="date"
-                value={this.state.birthday}
+                value={this.stringToDate(this.state.birthday)}
                 onChange={this.handleChange}
             />
             </FormGroup>
+            <div id="birthdayError"></div>
             <FormGroup controlId="adress" bsSize="large">
             <ControlLabel>Adresse complète</ControlLabel>
             <FormControl
@@ -138,19 +177,22 @@ export class Information extends React.Component {
                 onChange={this.handleChange}
             />
             </FormGroup>
+            <div id="adressError"></div>
             <FormGroup controlId="tel" bsSize="large">
             <ControlLabel>Téléphone</ControlLabel>
             <FormControl
                 type="text"
-                value={this.state.tel}
+                value={"0" + this.state.tel}
                 onChange={this.handleChange}
             />
             </FormGroup>
-            <div id="errorSaisie">
+            <div id="telError"></div>
+            <div id="errorSubmit">
             </div>
             <Button onClick={this.modify} block bsSize="large" type="submit">
             Modifier !
             </Button>
+            
         </div>
       </div>
     );

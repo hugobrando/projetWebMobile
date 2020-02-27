@@ -87,34 +87,46 @@ async function login(req, res) {
 
 
 async function edit(req, res) {
-  const { oldEmail, newEmail, password } = req.body;
-  if (!newEmail || !oldEmail || !password) {
-    //Le cas où l'email ou bien le password ne serait pas soumit ou nul
+  const { token, email, pseudo, firstname, lastname, birthday, adress, tel } = req.body;
+  if (!token || !email || !pseudo || !firstname || !lastname || !birthday || !adress || !tel) {
+    //Le cas où les infos sont vide
     return res.status(400).json({
       text: "Requête invalide"
     });
   }
+ 
   // On check en base si l'utilisateur existe déjà
   try {
-    const email = oldEmail
+    const oldUser = jwt.decode(token, config.secret);
+
+    const email = oldUser.email;
     const findUser = await User.findOne({ email });
       if (!findUser)
+        
         return res.status(401).json({
           text: "L'utilisateur n'existe pas"
         });
   } catch (error) {
     return res.status(500).json({ error });
   }
-  
+ 
   try {
-    const email = oldEmail
     const user = await User.findOne({ email });
     if (user){
-      user.email = newEmail;
-      user.password = passwordHash.generate(password);
-      await user.save();
+      user.email = email;
+      user.pseudo = pseudo;
+      user.firstname = firstname;
+      user.birthday = birthday; 
+      user.adress = adress;
+      user.tel = tel;
+      console.log(user);
+      const userObject = await user.save();
+      console.log(userObject);
       return res.status(200).json({
         text: "Succès",
+        token: userObject.getToken(),
+        nom: firstname,
+        prenom: lastname
       });
     }
     else{
@@ -124,7 +136,7 @@ async function edit(req, res) {
     }
     
   } catch (error) {
-    return res.status(500).json({ error });
+    return res.status(500).json({ text: "La requête a echoué" });
   }
 }
 
@@ -138,7 +150,6 @@ async function info(req, res) {
     });
   }
   const user = jwt.decode(token, config.secret);
-  console.log(user)
   return res.status(200).json({
     text: "Succès",
     email: user.email,

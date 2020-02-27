@@ -109,19 +109,20 @@ async function edit(req, res) {
   } catch (error) {
     return res.status(500).json({ error });
   }
- 
+  const newEmail = email;
   try {
+    const oldUser = jwt.decode(token, config.secret);
+
+    const email = oldUser.email;
     const user = await User.findOne({ email });
     if (user){
-      user.email = email;
+      user.email = newEmail;
       user.pseudo = pseudo;
       user.firstname = firstname;
       user.birthday = birthday; 
       user.adress = adress;
       user.tel = tel;
-      console.log(user);
       const userObject = await user.save();
-      console.log(userObject);
       return res.status(200).json({
         text: "Succès",
         token: userObject.getToken(),

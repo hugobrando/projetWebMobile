@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 
 //Connexion à la base de donnée
 mongoose
-  .connect("mongodb://localhost/mernapp", {useNewUrlParser: true})
+  .connect(process.env.MONGODB_URI || "mongodb://localhost/mernapp", {useNewUrlParser: true})
   .then(() => {
     console.log("Connected to mongoDB");
   })
@@ -46,5 +46,5 @@ app.use("/user", router);
 require(__dirname + "/controllers/userController")(router);
 
 //Définition et mise en place du port d'écoute
-const port = 9000;
+const port = process.env.PORT || 9000;
 app.listen(port, () => console.log(`Listening on port ${port}`));

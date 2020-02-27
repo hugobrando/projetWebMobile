@@ -182,7 +182,7 @@ export class Information extends React.Component {
             <ControlLabel>Téléphone</ControlLabel>
             <FormControl
                 type="text"
-                value={"0" + this.state.tel}
+                value={this.state.tel}
                 onChange={this.handleChange}
             />
             </FormGroup>

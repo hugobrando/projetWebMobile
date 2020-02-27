@@ -15,6 +15,14 @@ export class Dashboard extends React.Component {
 
   render() {
     return (
+      <div>
+      <nav id="navbar-custom" class="navbar navbar-default navbar-fixed-left">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Filtres</a>
+            </div>
+            <a class="navbar-brand" href="#">Acceuil</a>
+        
+        </nav>
       <div className="Dashboard">
         <h1>Dashboard</h1>
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
@@ -24,6 +32,7 @@ export class Dashboard extends React.Component {
         <Button onClick={this.information} block bsSize="large" type="submit">
           Voir mes informations
         </Button>
+      </div>
       </div>
     );
   }

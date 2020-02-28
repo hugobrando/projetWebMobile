@@ -44,6 +44,8 @@ app.use(function(req, res, next) {
 const router = express.Router();
 app.use("/user", router);
 require(__dirname + "/controllers/userController")(router);
+app.use("/post", router);
+require(__dirname + "/controllers/postController")(router);
 
 //Définition et mise en place du port d'écoute
 const port = process.env.PORT || 9000;

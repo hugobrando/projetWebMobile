@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+var Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId;
 
 const schema = mongoose.Schema({
     libelle : {
@@ -13,8 +15,12 @@ const schema = mongoose.Schema({
         type: [ObjectId],
         required: true
       },
-    nbSignalement : {
+    signalement : {
         type: [ObjectId],
+        required: true
+      },
+    userId : {
+        type: ObjectId,
         required: true
       }   
 })

@@ -6,8 +6,8 @@ const config = require("../../config/config");
 
 
 async function create(req, res) {
-    const { description, libelle, token, categorie} = req.body;
-    if (!description || !libelle || !token || !categorie) {
+    const { libelle, token, postId } = req.body;
+    if ( !libelle || !token || !postId) {
       //Verif des infos qui arivent
       return res.status(400).json({
         text: "Requête invalide"
@@ -17,24 +17,23 @@ async function create(req, res) {
     const like = [];
     const dislike = [];
     const signalement = [];
-    const reponses = [];
     const userId = jwt.decode(token, config.secret);
 
-    const post = {
-      description,
+    const reponse = {
       libelle,
       like,
       dislike,
       signalement,
       userId,
-      categorie,
-      reponses
     };
     
     try {
       // Sauvegarde de l'utilisateur en base
-      const postData = new Post(post);
-      await postData.save();
+      const reponseData = new Reponse(reponse);
+      const reponseObject = await reponseData.save();
+      const post = await Post.findOne({ _id: postId });
+      post.reponses.push(reponseObject);
+      await post.save();
       return res.status(200).json({
         text: "Succès",
       });
@@ -44,8 +43,8 @@ async function create(req, res) {
   }
 
   async function update(req, res) {
-    const { postId, description, libelle, categorie } = req.body;
-    if (!postId ||!description || !libelle || !categorie) {
+    const { reponseId, libelle } = req.body;
+    if (!reponseId ||!libelle) {
       //Le cas où les infos sont vide
       return res.status(400).json({
         text: "Requête invalide"
@@ -54,13 +53,11 @@ async function create(req, res) {
    
     
     try {
-      const post = await Post.findOne({ _id: postId });
-      if (post){
-        post.description = description;
-        post.libelle = libelle;
-        post.categorie = categorie;
+      const reponse = await Reponse.findOne({ _id: reponseId });
+      if (reponse){
+        reponse.libelle = libelle;
 
-        await post.save();
+        await reponse.save();
         return res.status(200).json({
           text: "Succès",
         });
@@ -78,16 +75,16 @@ async function create(req, res) {
   
 
   async function get(req, res) {
-    const { postId } = req.params;
-    if (!postId) {
+    const { reponseId } = req.params;
+    if (!reponseId) {
       //Le cas où ya pas de param
       return res.status(400).json({
         text: "Requête invalide"
       });
     }
     try {
-        var post = await Post.findOne({ _id: postId });
-        return res.status(200).json(post);
+        var reponse = await Reponse.findOne({ _id: reponseId });
+        return res.status(200).json(reponse);
     } catch (error) {
         return res.status(500).json({ text: "La requête a echoué" });
     }
@@ -95,8 +92,8 @@ async function create(req, res) {
   }
 
   async function addLike(req, res) {
-    const { postId, token } = req.body;
-    if (!postId ||!token) {
+    const { reponseId, token } = req.body;
+    if (!reponseId ||!token) {
       //Le cas où les infos sont vide
       return res.status(400).json({
         text: "Requête invalide"
@@ -106,10 +103,10 @@ async function create(req, res) {
     
     try {
       const userId = jwt.decode(token, config.secret);
-      const post = await Post.findOne({ _id: postId });
-      if (!alreadyLike(userId,post) && !alreadyDislike(userId,post)){
-        post.like.push(userId);
-        await post.save();
+      const reponse = await Reponse.findOne({ _id: reponseId });
+      if (!alreadyLike(userId,reponse) && !alreadyDislike(userId,reponse)){
+        reponse.like.push(userId);
+        await reponse.save();
         return res.status(200).json({
           text: "Succès",
         });
@@ -127,8 +124,8 @@ async function create(req, res) {
 
   
   async function deleteLike(req, res) {
-    const { postId, token } = req.body;
-    if (!postId ||!token) {
+    const { reponse, token } = req.body;
+    if (!reponseId ||!token) {
       //Le cas où les infos sont vide
       return res.status(400).json({
         text: "Requête invalide"
@@ -138,10 +135,10 @@ async function create(req, res) {
     
     try {
       const userId = jwt.decode(token, config.secret);
-      const post = await Post.findOne({ _id: postId });
-      if (alreadyLike(userId,post)){
-        post.like.splice(post.like.indexOf(userId._id), 1);
-        await post.save();
+      const reponse = await Reponse.findOne({ _id: reponseId });
+      if (alreadyLike(userId,reponse)){
+        reponse.like.splice(reponse.like.indexOf(userId._id), 1);
+        await reponse.save();
         return res.status(200).json({
           text: "Succès",
         });
@@ -159,8 +156,8 @@ async function create(req, res) {
 
   
   async function addDislike(req, res) {
-    const { postId, token } = req.body;
-    if (!postId ||!token) {
+    const { reponseId, token } = req.body;
+    if (!reponseId ||!token) {
       //Le cas où les infos sont vide
       return res.status(400).json({
         text: "Requête invalide"
@@ -170,10 +167,10 @@ async function create(req, res) {
     
     try {
       const userId = jwt.decode(token, config.secret);
-      const post = await Post.findOne({ _id: postId });
-      if (!alreadyDislike(userId,post) && !alreadyLike(userId,post)){
-        post.dislike.push(userId);
-        await post.save();
+      const reponse = await Reponse.findOne({ _id: reponseId });
+      if (!alreadyDislike(userId,reponse) && !alreadyLike(userId,reponse)){
+        reponse.dislike.push(userId);
+        await reponse.save();
         return res.status(200).json({
           text: "Succès",
         });
@@ -191,8 +188,8 @@ async function create(req, res) {
 
   
   async function deleteDislike(req, res) {
-    const { postId, token } = req.body;
-    if (!postId ||!token) {
+    const { reponseId, token } = req.body;
+    if (!reponseId ||!token) {
       //Le cas où les infos sont vide
       return res.status(400).json({
         text: "Requête invalide"
@@ -202,10 +199,10 @@ async function create(req, res) {
     
     try {
       const userId = jwt.decode(token, config.secret);
-      const post = await Post.findOne({ _id: postId });
-      if (alreadyDislike(userId,post)){
-        post.dislike.splice(post.dislike.indexOf(userId._id), 1);
-        await post.save();
+      const reponse = await Reponse.findOne({ _id: reponseId });
+      if (alreadyDislike(userId,reponse)){
+        reponse.dislike.splice(reponse.dislike.indexOf(userId._id), 1);
+        await reponse.save();
         return res.status(200).json({
           text: "Succès",
         });
@@ -223,8 +220,8 @@ async function create(req, res) {
 
    
   async function addSignalement(req, res) {
-    const { postId, token } = req.body;
-    if (!postId ||!token) {
+    const { reponseId, token } = req.body;
+    if (!reponseId ||!token) {
       //Le cas où les infos sont vide
       return res.status(400).json({
         text: "Requête invalide"
@@ -234,10 +231,10 @@ async function create(req, res) {
     
     try {
       const userId = jwt.decode(token, config.secret);
-      const post = await Post.findOne({ _id: postId });
-      if (!alreadySignaled(userId,post)){
-        post.signalement.push(userId);
-        await post.save();
+      const reponse = await Reponse.findOne({ _id: reponseId });
+      if (!alreadySignaled(userId,reponse)){
+        reponse.signalement.push(userId);
+        await reponse.save();
         return res.status(200).json({
           text: "Succès",
         });
@@ -255,8 +252,8 @@ async function create(req, res) {
 
   
   async function deleteSignalement(req, res) {
-    const { postId, token } = req.body;
-    if (!postId ||!token) {
+    const { reponseId, token } = req.body;
+    if (!reponseId ||!token) {
       //Le cas où les infos sont vide
       return res.status(400).json({
         text: "Requête invalide"
@@ -266,10 +263,10 @@ async function create(req, res) {
     
     try {
       const userId = jwt.decode(token, config.secret);
-      const post = await Post.findOne({ _id: postId });
-      if (alreadySignaled(userId,post)){
-        post.signalement.splice(post.signalement.indexOf(userId._id), 1);
-        await post.save();
+      const reponse = await Reponse.findOne({ _id: reponseId });
+      if (alreadySignaled(userId,reponse)){
+        reponse.signalement.splice(reponse.signalement.indexOf(userId._id), 1);
+        await reponse.save();
         return res.status(200).json({
           text: "Succès",
         });
@@ -284,24 +281,7 @@ async function create(req, res) {
       return res.status(500).json({ text: "La requête a echoué" });
     }
   }
-  
-  async function getAllResponse(req, res) {
-    const { postId } = req.params;
-    if (!postId) {
-      //Le cas où ya pas de param
-      return res.status(400).json({
-        text: "Requête invalide"
-      });
-    }
-    try {
-        var post = await Post.findOne({ _id: postId });
-        var reponseData = await createAllResponse(post);
-        return res.status(200).json(reponseData);
-    } catch (error) {
-        return res.status(500).json({ text: "La requête a echoué" });
-    }
-    
-  }
+
 
   //On exporte nos fonctions
   
@@ -314,13 +294,13 @@ exports.addDislike = addDislike;
 exports.deleteDislike = deleteDislike;
 exports.addSignalement = addSignalement;
 exports.deleteSignalement = deleteSignalement;
-exports.getAllResponse= getAllResponse;
+
 
 //fonction interne
 
-function alreadyLike(userId,post){
+function alreadyLike(userId,reponse){
     var already = false
-    post.like.forEach(function(item) {
+    reponse.like.forEach(function(item) {
         if(item.equals(userId._id)){
             already = true;
         }
@@ -329,9 +309,9 @@ function alreadyLike(userId,post){
 }
 
 
-function alreadyDislike(userId,post){
+function alreadyDislike(userId,reponse){
     var already = false
-    post.dislike.forEach(function(item) {
+    reponse.dislike.forEach(function(item) {
         if(item.equals(userId._id)){
             already = true;
         }
@@ -339,33 +319,13 @@ function alreadyDislike(userId,post){
       return already;
 }
 
-function alreadySignaled(userId,post){
+function alreadySignaled(userId,reponse){
     var already = false
-    post.signalement.forEach(function(item) {
+    reponse.signalement.forEach(function(item) {
         if(item.equals(userId._id)){
             already = true;
         }
       });
       return already;
-}
-
-async function createAllResponse(post){
-  var reponseData = [];
-  for(var i in post.reponses){
-    var reponse = post.reponses[i];
-    var r = await Reponse.findOne({ _id: reponse._id });
-    if(r){
-      reponseData.push({
-        like: r.like,
-        dislike: r.dislike,
-        signalement: r.signalement,
-        _id: r._id,
-        libelle: r.libelle,
-        userId: r.userId
-      });
-    }
-  };
-
-  return reponseData;
 }
 

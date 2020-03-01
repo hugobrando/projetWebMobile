@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 
 //Connexion à la base de donnée
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost/mernapp", {useNewUrlParser: true})
+  .connect(process.env.MONGODB_URI || "mongodb://localhost/mernapp", {useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => {
     console.log("Connected to mongoDB");
   })
@@ -41,11 +41,15 @@ app.use(function(req, res, next) {
 });
 
 //Définition du routeur
-const router = express.Router();
-app.use("/user", router);
-require(__dirname + "/controllers/userController")(router);
-app.use("/post", router);
-require(__dirname + "/controllers/postController")(router);
+const routerUser = express.Router();
+app.use("/user", routerUser);
+require(__dirname + "/controllers/userController")(routerUser);
+const routerPost = express.Router();
+app.use("/post", routerPost);
+require(__dirname + "/controllers/postController")(routerPost);
+const routerReponse = express.Router();
+app.use("/reponse", routerReponse);
+require(__dirname + "/controllers/reponseController")(routerReponse);
 
 //Définition et mise en place du port d'écoute
 const port = process.env.PORT || 9000;

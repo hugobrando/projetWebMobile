@@ -1,5 +1,6 @@
 const Post = require("../../schema/post.js");
 const Reponse = require("../../schema/reponse.js");
+const User = require("../../schema/user.js");
 const jwt = require("jwt-simple");
 const config = require("../../config/config");
 
@@ -84,6 +85,8 @@ async function create(req, res) {
     }
     try {
         var reponse = await Reponse.findOne({ _id: reponseId });
+        var user = await User.findOne({ _id: reponse.userId }).select('pseudo');
+        reponse.userId = user;
         return res.status(200).json(reponse);
     } catch (error) {
         return res.status(500).json({ text: "La requête a echoué" });

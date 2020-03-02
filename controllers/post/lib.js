@@ -1,5 +1,6 @@
 const Post = require("../../schema/post.js");
 const Reponse = require("../../schema/reponse.js");
+const User = require("../../schema/user.js");
 const jwt = require("jwt-simple");
 const config = require("../../config/config");
 
@@ -87,6 +88,8 @@ async function create(req, res) {
     }
     try {
         var post = await Post.findOne({ _id: postId });
+        var user = await User.findOne({ _id: post.userId }).select('pseudo');
+        post.userId = user;
         return res.status(200).json(post);
     } catch (error) {
         return res.status(500).json({ text: "La requête a echoué" });
@@ -303,6 +306,17 @@ async function create(req, res) {
     
   }
 
+  async function getAllPost(req, res) {
+    try {
+        var allPost = await createAllPost();
+        return res.status(200).json(allPost);
+    } catch (error) {
+        
+        return res.status(500).json({ text: "La requête a echoué" });
+    }
+    
+  }
+
   //On exporte nos fonctions
   
 exports.create = create;
@@ -314,7 +328,8 @@ exports.addDislike = addDislike;
 exports.deleteDislike = deleteDislike;
 exports.addSignalement = addSignalement;
 exports.deleteSignalement = deleteSignalement;
-exports.getAllResponse= getAllResponse;
+exports.getAllResponse = getAllResponse;
+exports.getAllPost = getAllPost;
 
 //fonction interne
 
@@ -355,17 +370,32 @@ async function createAllResponse(post){
     var reponse = post.reponses[i];
     var r = await Reponse.findOne({ _id: reponse._id });
     if(r){
-      reponseData.push({
-        like: r.like,
-        dislike: r.dislike,
-        signalement: r.signalement,
-        _id: r._id,
-        libelle: r.libelle,
-        userId: r.userId
-      });
+      var u = await User.findOne({ _id: r.userId }).select('pseudo');
+      if(r){
+        reponseData.push({
+          like: r.like,
+          dislike: r.dislike,
+          signalement: r.signalement,
+          _id: r._id,
+          libelle: r.libelle,
+          userId: u
+        }); //on envoie pas la version
+      }
     }
   };
 
   return reponseData;
 }
+
+async function createAllPost(){
+  var allPost = await Post.find().sort({create: -1});
+  for(var i in allPost){
+    var post = allPost[i];
+    var u = await User.findOne({ _id: post.userId }).select('pseudo');
+    allPost[i].userId = u;
+  };
+
+  return allPost;
+}
+
 

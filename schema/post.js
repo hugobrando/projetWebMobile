@@ -13,19 +13,23 @@ const schema = mongoose.Schema({
       },
     like : {
         type: [ObjectId],
-        required: true
+        required: true,
+        ref: 'User'
       },
     dislike : {
         type: [ObjectId],
-        required: true
+        required: true,
+        ref: 'User'
       } ,
     signalement : {
         type: [ObjectId],
-        required: true
+        required: true,
+        ref: 'User'
       }, 
     userId : {
         type: ObjectId,
-        required: true
+        required: true,
+        ref: 'User'
       }, 
     categorie : {
         type: String,
@@ -33,7 +37,12 @@ const schema = mongoose.Schema({
       },
     reponses : {
         type: [ObjectId],
-        required: true
+        required: true,
+        ref: 'Reponse'
+      },
+    create: { 
+        type: Date,
+        default: Date.now
       }
 })
 

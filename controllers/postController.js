@@ -5,6 +5,7 @@ module.exports = function (app) {
     ///app.delete('/delete',post.delete);
     app.patch('/update',post.update)
     app.get('/:postId',post.get)
+    app.get('/get/allPost',post.getAllPost)
     app.get('/allReponse/:postId',post.getAllResponse)
     app.patch('/addLike',post.addLike)
     app.patch('/deleteLike',post.deleteLike)

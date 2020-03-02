@@ -38,8 +38,8 @@ async function create(req, res) {
       await post.save();
       //Sauvegarde de la notification
       const userOfPost = await User.findOne({ _id: post.userId });
-      if(!(await alreadyNotif(userOfPost,postId))){ //on regarde que la notif n'a pas deja été créé par une autre reponse
-        console.log("ajout notif")  ;
+      if(!(await alreadyNotif(userOfPost,postId))){ //on regarde que la notif n'a pas deja été créé par une autre reponse (si oui on remet la donnée vu a false)
+        console.log("création notif")  ;
         const vue = false;
         const notif = {
           postId,
@@ -349,12 +349,16 @@ function alreadySignaled(userId,reponse){
 }
 
 async function alreadyNotif(user,postId){
-  var already = false
-
+  var already = false;
+  
   for(var i in user.notifications){
     var notification = user.notifications[i];
-    //var n = await Notification.findOne({ _id: notification });
-    if(notification.postId.equals(postId._id)){
+    var n = await Notification.findOne({ _id: notification });
+    if(n.postId.equals(postId)){
+      if(n.vue){
+        n.vue = false;
+        n.save();
+      }
       already = true;
     }
   };

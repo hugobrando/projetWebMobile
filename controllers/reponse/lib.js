@@ -1,6 +1,7 @@
 const Post = require("../../schema/post.js");
 const Reponse = require("../../schema/reponse.js");
 const User = require("../../schema/user.js");
+const Notification = require("../../schema/notification.js");
 const jwt = require("jwt-simple");
 const config = require("../../config/config");
 
@@ -27,14 +28,29 @@ async function create(req, res) {
       signalement,
       userId,
     };
-    
     try {
-      // Sauvegarde de l'utilisateur en base
+      // Sauvegarde de la reponse en base
       const reponseData = new Reponse(reponse);
       const reponseObject = await reponseData.save();
+      //Sauvegarde de la reponse dans le post 
       const post = await Post.findOne({ _id: postId });
       post.reponses.push(reponseObject);
       await post.save();
+      //Sauvegarde de la notification
+      const userOfPost = await User.findOne({ _id: post.userId });
+      if(!(await alreadyNotif(userOfPost,postId))){ //on regarde que la notif n'a pas deja été créé par une autre reponse
+        console.log("ajout notif")  ;
+        const vue = false;
+        const notif = {
+          postId,
+          vue
+        };
+        const notifData = new Notification(notif);
+        const reponseObject = await notifData.save();
+        // Sauvegarde de la notif pour l'user du post
+        userOfPost.notifications.push(reponseObject);
+        userOfPost.save();
+      }
       return res.status(200).json({
         text: "Succès",
       });
@@ -330,5 +346,19 @@ function alreadySignaled(userId,reponse){
         }
       });
       return already;
+}
+
+async function alreadyNotif(user,postId){
+  var already = false
+
+  for(var i in user.notifications){
+    var notification = user.notifications[i];
+    //var n = await Notification.findOne({ _id: notification });
+    if(notification.postId.equals(postId._id)){
+      already = true;
+    }
+  };
+
+  return already;
 }
 

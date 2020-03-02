@@ -3,6 +3,9 @@ const passwordHash = require("password-hash");
 const jwt = require("jwt-simple");
 const config = require("../config/config");
 
+var Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId;
+
 const user = mongoose.Schema(
   {
     email: {
@@ -43,6 +46,10 @@ const user = mongoose.Schema(
     isAdmin:{
       type: Boolean,
       required: true
+    },
+    notifications:{
+      type: [ObjectId],
+      ref: 'Notification'
     }
   },
   { timestamps: { createdAt: "created_at" } }

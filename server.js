@@ -50,6 +50,9 @@ require(__dirname + "/controllers/postController")(routerPost);
 const routerReponse = express.Router();
 app.use("/reponse", routerReponse);
 require(__dirname + "/controllers/reponseController")(routerReponse);
+const routerNotification = express.Router();
+app.use("/notification", routerNotification);
+require(__dirname + "/controllers/notificationController")(routerNotification);
 
 //Définition et mise en place du port d'écoute
 const port = process.env.PORT || 9000;

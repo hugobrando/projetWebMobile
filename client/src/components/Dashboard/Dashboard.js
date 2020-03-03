@@ -20,6 +20,10 @@ export class Dashboard extends React.Component {
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Filtres</a>
             </div>
+            <input type="text" class="form-control" id="validationTooltip01" value="Recherche" required></input>
+            <Button block bsSize="small" type="submit">
+              Rechercher
+            </Button>
             <div class="checkbox">
               <label>
                 <input type="checkbox" data-toggle="toggle"></input>
@@ -42,11 +46,17 @@ export class Dashboard extends React.Component {
       <option>50-100 likes</option>
       <option>+100 likes</option>
     </select>
+    <form>
+  <div class="form-group">
+    <label for="formControlRange">Test de filtre</label>
+    <input type="range" class="form-control-range" id="formControlRange"></input>
+  </div>
+</form>
     </div>
-            <Button onClick={this.disconnect} block bsSize="large" type="submit">
+            <Button  block bsSize="large" type="submit">
               Se déconnecter
             </Button>
-            <Button onClick={this.information} block bsSize="large" type="submit">
+            <Button block bsSize="large" type="submit">
               Mes informations
             </Button>
         </nav>

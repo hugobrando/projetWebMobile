@@ -13,6 +13,10 @@ export class Dashboard extends React.Component {
     window.location = "/information";
   };
 
+  post = () => {
+    window.location = "/createPost";
+  };
+
   render() {
     return (
       <div>
@@ -53,11 +57,14 @@ export class Dashboard extends React.Component {
   </div>
 </form>
     </div>
-            <Button  block bsSize="large" type="submit">
+            <Button  block bsSize="large" type="submit" onClick={this.disconnect}>
               Se déconnecter
             </Button>
-            <Button block bsSize="large" type="submit">
+            <Button block bsSize="large" type="submit" onClick={this.information}>
               Mes informations
+            </Button>
+            <Button block bsSize="large" type="submit" onClick={this.post}>
+              Poster
             </Button>
         </nav>
       <div className="Dashboard">

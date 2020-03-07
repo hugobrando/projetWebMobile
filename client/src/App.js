@@ -5,6 +5,7 @@ import { Login } from "./components/Login/Login.js";
 import { Signup } from "./components/Signup/Signup.js";
 import { PrivateRoute } from "./components/PrivateRoute.js";
 import { Information } from "./components/Perso/Information.js"
+import { CreatePost } from "./components/Post/CreatePost.js"
 import "./App.css";
 
 class App extends Component {
@@ -17,6 +18,7 @@ class App extends Component {
             <Route exact path="/signup" component={Signup} />
             <PrivateRoute path="/dashboard" component={Dashboard} />
             <PrivateRoute path="/information" component={Information} />
+            <PrivateRoute path="/createPost" component={CreatePost} />
           </Switch>
         </div>
       </div>

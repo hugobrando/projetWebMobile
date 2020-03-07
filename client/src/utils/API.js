@@ -51,5 +51,9 @@ export default {
   getInfoUser: function(){
     const token = localStorage.getItem("token");
     return axios.get(`${burl}/user/info/` + token , { headers: headers });
-  }
+  },
+
+  createPost: function(send) {
+    return axios.post(`${burl}/post/create`, send, { headers: headers });
+  },
 };

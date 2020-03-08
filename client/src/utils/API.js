@@ -56,4 +56,41 @@ export default {
   createPost: function(send) {
     return axios.post(`${burl}/post/create`, send, { headers: headers });
   },
+
+  getAllPost: function() {
+    return axios.get(`${burl}/post/get/allPost`, { headers: headers });
+  },
+
+  getPost: function(id) {
+    return axios.get(`${burl}/post/` + id, { headers: headers });
+  },
+
+  addLike: function(postId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/post/addLike`,{
+      postId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  addDislike: function(postId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/post/addDislike`,{
+      postId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  addSignalement: function(postId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/post/addSignalement`,{
+      postId,
+      token
+    }
+    , { headers: headers });
+  }
+
+
 };

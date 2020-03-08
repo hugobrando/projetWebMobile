@@ -3,18 +3,20 @@ import { Button } from "react-bootstrap";
 
 import API from "../../utils/API";
 
-export class Dashboard extends React.Component {
+export class ShowPost extends React.Component {
 
   constructor(props) {
     super(props);
+    
     this.state = {
-      allPost: []
+      post: []
     };
+    this.loadPost = this.loadPost.bind(this);
+    const {id} = this.props.match.params;
 
-    this.loadAllPost = this.loadAllPost.bind(this);
-    this.like = this.like.bind(this);
-    this.loadAllPost();
-  }
+    this.loadPost(id);
+  };
+
   
 
   disconnect = () => {
@@ -26,31 +28,19 @@ export class Dashboard extends React.Component {
     window.location = "/information";
   };
 
-  like = async  (element) => {
-    API.addLike(element._id);
-  };
-  
-  dislike = (element) => {
-    API.addDislike(element._id);
-  };
-
-  signaler = (element) => {
-    API.addSignalement(element._id);
-  };
-
   post = () => {
     window.location = "/createPost";
   };
 
-  loadAllPost = async () => {
-    const res = API.getAllPost();
+  loadPost = async (id) => {
+    const res = API.getPost(id);
     this.setState({
-      allPost: (await res).data
+      post: (await res).data
     });
   };
 
   render() {
-    const { allPost } = this.state;
+    const { post } = this.state;
     return (
       <div>
       <nav id="navbar-custom" class="navbar navbar-default navbar-fixed-left">
@@ -104,32 +94,31 @@ export class Dashboard extends React.Component {
         <h1>Dashboard</h1>
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
       </div>
-      {allPost.map(element => 
+
       <div class="list-group">
-        <a href={"post/" + element._id} class="list-group-item list-group-item-action active">
+        <a class="list-group-item list-group-item-action active">
           <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{element.description}</h5>
-            <small>Posté par {element.userId.pseudo} le {element.create}</small>
+            <h5 class="mb-1">{this.post.description}</h5>
+            <small>Posté par {post.userId.pseudo} le {post.create}</small>
           </div>
-          <p class="mb-1">{element.libelle}</p>
-          <small>Categorie : {element.categorie}</small>
-          </a>
-          <button type="button" class="btn btn-default btn-sm" onclick={this.like(element)}>
-            <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
+          <p class="mb-1">{post.libelle}</p>
+          <small>Categorie : {post.categorie}</small>
+          <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-thumbs-up"></span> Like {post.like.length}
           </button>
           <button type="button" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
+            <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {post.dislike.length}
           </button>
           <button type="button" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
+            <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {post.signalement.length}
           </button>
+        </a>
         
         
-        
-      </div>)
+      </div>
       
         
-      }
+
       
 
   </div>

@@ -49,6 +49,9 @@ export class Login extends React.Component {
     });
   };
   render() {
+    if(API.isAuth){
+      window.location = "/dashboard";
+    }
     const { email, password } = this.state;
     return (
       <div className="Login">

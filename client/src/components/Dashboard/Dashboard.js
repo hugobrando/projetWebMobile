@@ -57,7 +57,7 @@ export class Dashboard extends React.Component {
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Filtres</a>
             </div>
-            <input type="text" class="form-control" id="validationTooltip01" value="Recherche" required></input>
+            <input type="text" class="form-control" id="validationTooltip01" placeholder="Rechercher" required></input>
             <Button block bsSize="small" type="submit">
               Rechercher
             </Button>

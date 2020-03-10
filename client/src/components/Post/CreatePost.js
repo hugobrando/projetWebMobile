@@ -1,7 +1,8 @@
 import React from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Button, FormGroup, FormControl, ControlLabel,  } from "react-bootstrap";
 import API from "../../utils/API";
 import ReactDOM from 'react-dom';
+import { FormSelect } from "materialize-css";
 
 
 export class CreatePost extends React.Component {
@@ -74,7 +75,7 @@ export class CreatePost extends React.Component {
         </FormGroup>       
         <FormGroup controlId="libelle" bsSize="large">
           <ControlLabel>Libelle</ControlLabel>
-          <FormControl
+          <FormControl 
             autoFocus
             type="text"
             value={libelle}
@@ -84,12 +85,19 @@ export class CreatePost extends React.Component {
         </FormGroup>
         <FormGroup controlId="categorie" bsSize="large">
           <ControlLabel>Categorie</ControlLabel>
-          <FormControl
-            autoFocus
-            type="text"
-            value={categorie}
-            onChange={this.handleChange}
-          />
+          <FormControl componentClass="select" placeholder="select">
+              <option value="...">Selectionner une categorie</option>
+              <option value="Personnel">personnel</option>
+              <option value="Livre">livre</option>
+              <option value="Film">film</option>
+              <option value="Humour">humour</option>
+              <option value="Citation">citation</option>
+              <option value="Reseaux">reseaux</option>
+              <option value="Autre">autres</option>
+                  value={categorie}
+                  onChange={this.handleChange}
+          </FormControl>
+                  
           <div id="categorieError"></div>
         </FormGroup>
        

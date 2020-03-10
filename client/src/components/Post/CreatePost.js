@@ -31,7 +31,7 @@ export class CreatePost extends React.Component {
     }
     if (!categorie || categorie.length === 0){
       ReactDOM.render(
-        React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir votre nom !</p>),
+        React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir votre categorie !</p>),
         document.getElementById("categorieError")
       )
       valide = false;

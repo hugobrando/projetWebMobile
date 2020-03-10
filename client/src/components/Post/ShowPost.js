@@ -25,12 +25,14 @@ export class ShowPost extends React.Component {
         "categorie": "",
         "create": ""
     },
-    reponseAdd: ""
+    reponseAdd: "",
+    reponses: []
     };
     this.loadPost = this.loadPost.bind(this);
     const {id} = this.props.match.params;
     
     this.loadPost(id);
+    this.loadReponse(id);
   };
 
 
@@ -47,10 +49,23 @@ export class ShowPost extends React.Component {
     window.location = "/createPost";
   };
 
+  homePage = () => {
+    window.location = "/dashboard";
+  }
+
   loadPost = async (id) => {
     const res = API.getPost(id).then( res => {
       this.setState({
         post: res.data
+      })
+    }
+    )
+  };
+
+  loadReponse = async (id) => {
+    const res = API.getAllReponse(id).then( res => {
+      this.setState({
+        reponses: res.data
       })
     }
     )
@@ -77,8 +92,9 @@ export class ShowPost extends React.Component {
       try {
         const token = localStorage.getItem("token")
         const id = post._id;
-        const { data } = await API.createReponse({ reponseAdd, token, id });        
-        //reload les reponseAdds
+        const { data } = await API.createReponse(reponseAdd, token, id);        
+        //reload les reponseAdds    
+        this.loadReponse(id);
       } catch (error) {
         console.error(error);
         ReactDOM.render(
@@ -91,14 +107,14 @@ export class ShowPost extends React.Component {
 
 
   render() {
-    const { post, reponseAdd } = this.state;
+    const { post, reponseAdd, reponses } = this.state;
     return (
       <div>
       <nav id="navbar-custom" class="navbar navbar-default navbar-fixed-left">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Filtres</a>
             </div>
-            <input type="text" class="form-control" id="validationTooltip01" value="Recherche" required></input>
+            <input type="text" class="form-control" id="validationTooltip01" placeholder="Rechercher" required></input>
             <Button block bsSize="small" type="submit">
               Rechercher
             </Button>
@@ -116,21 +132,24 @@ export class ShowPost extends React.Component {
             </div>
             <div>
             <label for="Select1">tri des posts</label>
-    <select class="form-control" id="Select1">
-      <option>...</option>
-      <option>-10 likes</option>
-      <option>10-20 likes</option>
-      <option>20-50 likes</option>
-      <option>50-100 likes</option>
-      <option>+100 likes</option>
-    </select>
-    <form>
-  <div class="form-group">
-    <label for="formControlRange">Test de filtre</label>
-    <input type="range" class="form-control-range" id="formControlRange"></input>
-  </div>
-</form>
-    </div>
+      <select class="form-control" id="Select1">
+        <option>...</option>
+        <option>-10 likes</option>
+        <option>10-20 likes</option>
+        <option>20-50 likes</option>
+        <option>50-100 likes</option>
+        <option>+100 likes</option>
+      </select>
+            <form>
+          <div class="form-group">
+            <label for="formControlRange">Test de filtre</label>
+            <input type="range" class="form-control-range" id="formControlRange"></input>
+          </div>
+        </form>
+      </div>
+            <Button block bsSize="large" type="submit" onClick={this.homePage}>
+              Fil d'actualité
+            </Button>
             <Button  block bsSize="large" type="submit" onClick={this.disconnect}>
               Se déconnecter
             </Button>
@@ -167,12 +186,39 @@ export class ShowPost extends React.Component {
         
         
       </div>
+
+      <div className="Dashboard">
+        <h2>Toutes les reponses :</h2>
+        
+      </div>
+
+      {reponses.map(element => 
+      <div class="list-group">
+        <a href={"reponses/" + element._id} class="list-group-item list-group-item-action active">
+          <div class="d-flex w-100 justify-content-between">
+            <small>Posté par {element.userId.pseudo} le {element.create}</small>
+          </div>
+          <p class="mb-1">{element.libelle}</p>
+        </a>
+          <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
+          </button>
+          <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
+          </button>
+          <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
+          </button>
+        
+        
+        
+      </div>)
+    }
       
       <div id="comment"> 
-      <FormGroup controlId="description" bsSize="large">
+      <FormGroup controlId="reponseAdd" bsSize="large">
           <ControlLabel>Ajouter une réponse</ControlLabel>
           <FormControl
-            autoFocus
             type="text"
             value={reponseAdd}
             onChange={this.handleChange}

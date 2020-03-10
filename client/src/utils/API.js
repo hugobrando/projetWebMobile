@@ -61,6 +61,10 @@ export default {
     return axios.get(`${burl}/post/get/allPost`, { headers: headers });
   },
 
+  getAllReponse: function(id) {
+    return axios.get(`${burl}/post/allReponse/` + id, { headers: headers });
+  },
+
   getPost: function(id) {
     return axios.get(`${burl}/post/` + id, { headers: headers });
   },
@@ -93,7 +97,7 @@ export default {
   },
 
   createReponse: function(libelle, token, postId){
-    return axios.post(`${burl}/reponse/create`, {libelle, token, postId}, { headers: headers });
+    return axios.post(`${burl}/reponse/create`, { libelle, token, postId }, { headers: headers });
   }
 
 

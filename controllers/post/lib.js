@@ -378,7 +378,8 @@ async function createAllResponse(post){
           signalement: r.signalement,
           _id: r._id,
           libelle: r.libelle,
-          userId: u
+          userId: u,
+          create: r.create
         }); //on envoie pas la version
       }
     }

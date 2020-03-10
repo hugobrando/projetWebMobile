@@ -1,5 +1,6 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import ReactDOM from 'react-dom';
 
 import API from "../../utils/API";
 
@@ -9,15 +10,29 @@ export class ShowPost extends React.Component {
     super(props);
     
     this.state = {
-      post: []
+      post: {
+        "like": [],
+        "dislike": [],
+        "signalement": [],
+        "reponses": [],
+        "_id": "",
+        "description": "",
+        "libelle": "",
+        "userId": {
+            "_id": "",
+            "pseudo": ""
+        },
+        "categorie": "",
+        "create": ""
+    },
+    reponseAdd: ""
     };
     this.loadPost = this.loadPost.bind(this);
     const {id} = this.props.match.params;
-
+    
     this.loadPost(id);
   };
 
-  
 
   disconnect = () => {
     API.logout();
@@ -33,14 +48,50 @@ export class ShowPost extends React.Component {
   };
 
   loadPost = async (id) => {
-    const res = API.getPost(id);
+    const res = API.getPost(id).then( res => {
+      this.setState({
+        post: res.data
+      })
+    }
+    )
+  };
+
+  handleChange = (event) => {
     this.setState({
-      post: (await res).data
+      [event.target.id]: event.target.value
     });
   };
 
+  send = async () => {
+    const { post, reponseAdd } = this.state;
+    var valide = true;
+    if (!reponseAdd || reponseAdd.length === 0){
+      ReactDOM.render(
+        React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir une réponse !</p>),
+        document.getElementById("reponseAddError")
+      )
+      valide = false;
+    }
+    
+    if(valide){
+      try {
+        const token = localStorage.getItem("token")
+        const id = post._id;
+        const { data } = await API.createReponse({ reponseAdd, token, id });        
+        //reload les reponseAdds
+      } catch (error) {
+        console.error(error);
+        ReactDOM.render(
+          React.createElement('div', {}, <p className="error"> {error.response.data.text} !</p>),
+          document.getElementById("errorSubmit")
+        )
+      }
+    }
+  };
+
+
   render() {
-    const { post } = this.state;
+    const { post, reponseAdd } = this.state;
     return (
       <div>
       <nav id="navbar-custom" class="navbar navbar-default navbar-fixed-left">
@@ -91,8 +142,8 @@ export class ShowPost extends React.Component {
             </Button>
         </nav>
       <div className="Dashboard">
-        <h1>Dashboard</h1>
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
+        
       </div>
 
       <div class="list-group">
@@ -117,8 +168,25 @@ export class ShowPost extends React.Component {
         
       </div>
       
+      <div id="comment"> 
+      <FormGroup controlId="description" bsSize="large">
+          <ControlLabel>Ajouter une réponse</ControlLabel>
+          <FormControl
+            autoFocus
+            type="text"
+            value={reponseAdd}
+            onChange={this.handleChange}
+          />
+          <div id="reponseAddError"></div>
+      </FormGroup>       
         
-
+       
+        <Button onClick={this.send} block bsSize="large" type="submit">
+          Poster
+        </Button>
+        <div id="errorSubmit"></div>
+        
+      </div> 
       
 
   </div>

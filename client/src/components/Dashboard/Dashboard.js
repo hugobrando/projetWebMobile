@@ -113,7 +113,7 @@ export class Dashboard extends React.Component {
           </div>
           <p class="mb-1">{element.libelle}</p>
           <small>Categorie : {element.categorie}</small>
-          </a>
+        </a>
           <button type="button" class="btn btn-default btn-sm" onclick={this.like(element)}>
             <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
           </button>

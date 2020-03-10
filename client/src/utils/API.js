@@ -90,6 +90,10 @@ export default {
       token
     }
     , { headers: headers });
+  },
+
+  createReponse: function(libelle, token, postId){
+    return axios.post(`${burl}/reponse/create`, {libelle, token, postId}, { headers: headers });
   }
 
 

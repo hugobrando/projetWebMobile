@@ -17,7 +17,7 @@ async function update(req, res) {
     try {
       const notification = await Notification.findOne({ _id: notificationId });
       if (notification){
-        notification.vue = false;
+        notification.vue = true;
 
         await notification.save();
         return res.status(200).json({

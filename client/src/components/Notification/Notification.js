@@ -3,17 +3,16 @@ import { Button } from "react-bootstrap";
 
 import API from "../../utils/API";
 
-export class Dashboard extends React.Component {
+export class Notification extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      allPost: []
+      allNotification: []
     };
 
-    this.loadAllPost = this.loadAllPost.bind(this);
-    this.like = this.like.bind(this);
-    this.loadAllPost();
+    this.loadAllNotification = this.loadAllNotification.bind(this);
+    this.loadAllNotification();
   }
   
 
@@ -30,49 +29,27 @@ export class Dashboard extends React.Component {
     window.location = "/notification";
   };
 
-  like = async (element) => {
-    if(element.like.includes(localStorage.getItem("_id"))){
-      await API.deleteLikePost(element._id);
-    }
-    else{
-      await API.addLikePost(element._id);
-    }
-    this.loadAllPost();
-  };
-  
-  dislike = async (element) => {
-    if(element.dislike.includes(localStorage.getItem("_id"))){
-      await API.deleteDislikePost(element._id);
-    }
-    else{
-      await API.addDislikePost(element._id);
-    } 
-    this.loadAllPost();
-  };
-
-  signaler = async (element) => {
-    if(element.signalement.includes(localStorage.getItem("_id"))){
-      await API.deleteSignalementPost(element._id);
-    }
-    else{
-      await API.addSignalementPost(element._id);
-    } 
-    this.loadAllPost();
+  homePage = () => {
+    window.location = "/dashboard";
   };
 
   post = () => {
     window.location = "/createPost";
   };
 
-  loadAllPost = async () => {
-    const res = API.getAllPost();
+  showNotification = async (element) => {
+    const res = API.notificationVue(element._id);
+  }
+
+  loadAllNotification = async () => {
+    const res = API.getAllNotification();
     this.setState({
-      allPost: (await res).data
+        allNotification: (await res).data
     });
   };
 
   render() {
-    const { allPost } = this.state;
+    const { allNotification } = this.state;
     return (
       <div>
       <nav id="navbar-custom" class="navbar navbar-default navbar-fixed-left">
@@ -112,6 +89,9 @@ export class Dashboard extends React.Component {
   </div>
 </form>
     </div>
+            <Button block bsSize="large" type="submit" onClick={this.homePage}>
+              Fil d'actualité
+            </Button>
             <Button  block bsSize="large" type="submit" onClick={this.disconnect}>
               Se déconnecter
             </Button>
@@ -126,32 +106,39 @@ export class Dashboard extends React.Component {
             </Button>
         </nav>
       <div className="Dashboard">
-        <h1>Dashboard</h1>
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
       </div>
-      {allPost.map(element => 
-      <div class="list-group">
-        <a href={"post/" + element._id} class="list-group-item list-group-item-action active">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{element.description}</h5>
-            <small>Posté par {element.userId.pseudo} le {element.create}</small>
-          </div>
-          <p class="mb-1">{element.libelle}</p>
-          <small>Categorie : {element.categorie}</small>
-        </a>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.like(element)}>
-            <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
-          </button>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislike(element)}>
-            <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
-          </button>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.signaler(element)}>
-            <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
-          </button>
-        
-        
-        
-      </div>)
+      {allNotification.map(element => {
+          if(!element.vue) {
+            return(
+            <div class="list-group" >
+              <a href={"post/" + element.postId._id} class="list-group-item list-group-item-action active" onClick={() => this.showNotification(element)}>
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{element.postId.description}</h5>
+                </div>
+                <p class="mb-1">Vous avez {element.postId.like.length} like, {element.postId.dislike.length} dislike, {element.postId.signalement.length} signalements ! </p>
+                <p class="mb-1">Et {element.postId.reponses.length} réponses ! </p>
+                <small>Categorie : {element.postId.categorie}</small>
+              </a>
+                  
+            </div>)
+          }
+          else{
+            return(
+              <div class="list-group" >
+                <a href={"post/" + element.postId._id} class="list-group-item list-group-item-action" onClick={() => this.showNotification(element)}>
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{element.postId.description}</h5>
+                  </div>
+                  <p class="mb-1">Vous avez {element.postId.like.length} like, {element.postId.dislike.length} dislike, {element.postId.signalement.length} signalements ! </p>
+                  <p class="mb-1">Et {element.postId.reponses.length} réponses ! </p>
+                  <small>Categorie : {element.postId.categorie}</small>
+                </a>
+                    
+              </div>)
+          }
+        }
+      )
       
         
       }

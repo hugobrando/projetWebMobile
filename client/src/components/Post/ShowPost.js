@@ -51,7 +51,11 @@ export class ShowPost extends React.Component {
 
   homePage = () => {
     window.location = "/dashboard";
-  }
+  };
+
+  notification = () => {
+    window.location = "/notification";
+  };
 
   loadPost = async (id) => {
     const res = API.getPost(id).then( res => {
@@ -75,6 +79,72 @@ export class ShowPost extends React.Component {
     this.setState({
       [event.target.id]: event.target.value
     });
+  };
+
+  likePost = async (element) => {
+    if(element.like.includes(localStorage.getItem("_id"))){
+      await API.deleteLikePost(element._id);
+    }
+    else{
+      await API.addLikePost(element._id);
+    }
+    const {id} = this.props.match.params;
+    this.loadPost(id);
+  };
+  
+  dislikePost = async (element) => {
+    if(element.dislike.includes(localStorage.getItem("_id"))){
+      await API.deleteDislikePost(element._id);
+    }
+    else{
+      await API.addDislikePost(element._id);
+    } 
+    const {id} = this.props.match.params;
+    this.loadPost(id);
+  };
+
+  signalerPost = async (element) => {
+    if(element.signalement.includes(localStorage.getItem("_id"))){
+      await API.deleteSignalementPost(element._id);
+    }
+    else{
+      await API.addSignalementPost(element._id);
+    } 
+    const {id} = this.props.match.params;
+    this.loadPost(id);
+  };
+
+  likeReponse = async (element) => {
+    if(element.like.includes(localStorage.getItem("_id"))){
+      await API.deleteLikeReponse(element._id);
+    }
+    else{
+      await API.addLikeReponse(element._id);
+    }
+    const {id} = this.props.match.params;
+    this.loadReponse(id);
+  };
+  
+  dislikeReponse = async (element) => {
+    if(element.dislike.includes(localStorage.getItem("_id"))){
+      await API.deleteDislikeReponse(element._id);
+    }
+    else{
+      await API.addDislikeReponse(element._id);
+    } 
+    const {id} = this.props.match.params;
+    this.loadReponse(id);
+  };
+
+  signalerReponse = async (element) => {
+    if(element.signalement.includes(localStorage.getItem("_id"))){
+      await API.deleteSignalementReponse(element._id);
+    }
+    else{
+      await API.addSignalementReponse(element._id);
+    } 
+    const {id} = this.props.match.params;
+    this.loadReponse(id);
   };
 
   send = async () => {
@@ -159,6 +229,9 @@ export class ShowPost extends React.Component {
             <Button block bsSize="large" type="submit" onClick={this.post}>
               Poster
             </Button>
+            <Button block bsSize="large" type="submit" onClick={this.notification}>
+              Notifications
+            </Button>
         </nav>
       <div className="Dashboard">
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
@@ -173,13 +246,13 @@ export class ShowPost extends React.Component {
           </div>
           <p class="mb-1">{post.libelle}</p>
           <small>Categorie : {post.categorie}</small>
-          <button type="button" class="btn btn-default btn-sm">
+          <button type="button" class="btn btn-default btn-sm" onClick={() => this.likePost(post)}>
             <span class="glyphicon glyphicon-thumbs-up"></span> Like {post.like.length}
           </button>
-          <button type="button" class="btn btn-default btn-sm">
+          <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislikePost(post)}>
             <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {post.dislike.length}
           </button>
-          <button type="button" class="btn btn-default btn-sm">
+          <button type="button" class="btn btn-default btn-sm" onClick={() => this.signalerPost(post)}>
             <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {post.signalement.length}
           </button>
         </a>
@@ -194,19 +267,19 @@ export class ShowPost extends React.Component {
 
       {reponses.map(element => 
       <div class="list-group">
-        <a href={"reponses/" + element._id} class="list-group-item list-group-item-action active">
+        <a class="list-group-item list-group-item-action active">
           <div class="d-flex w-100 justify-content-between">
             <small>Posté par {element.userId.pseudo} le {element.create}</small>
           </div>
           <p class="mb-1">{element.libelle}</p>
         </a>
-          <button type="button" class="btn btn-default btn-sm">
+        <button type="button" class="btn btn-default btn-sm" onClick={() => this.likeReponse(element)}>
             <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
           </button>
-          <button type="button" class="btn btn-default btn-sm">
+          <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislikeReponse(element)}>
             <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
           </button>
-          <button type="button" class="btn btn-default btn-sm">
+          <button type="button" class="btn btn-default btn-sm" onClick={() => this.signalerReponse(element)}>
             <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
           </button>
         

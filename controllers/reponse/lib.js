@@ -143,7 +143,7 @@ async function create(req, res) {
 
   
   async function deleteLike(req, res) {
-    const { reponse, token } = req.body;
+    const { reponseId, token } = req.body;
     if (!reponseId ||!token) {
       //Le cas où les infos sont vide
       return res.status(400).json({
@@ -195,7 +195,7 @@ async function create(req, res) {
         });
       }
       else{
-        return res.status(400).json({
+        return res.status(401).json({
           text: "Vous avez déjà disliké ou liké !"
         });
       }

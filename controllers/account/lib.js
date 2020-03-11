@@ -46,7 +46,8 @@ async function signup(req, res) {
       text: "Succès",
       token: userObject.getToken(),
       nom: firstname,
-      prenom: lastname
+      prenom: lastname,
+      _id: userObject._id
     });
   } catch (error) {
     return res.status(500).json({ error });
@@ -76,6 +77,7 @@ async function login(req, res) {
         token: findUser.getToken(),
         nom: findUser.firstname,
         prenom: findUser.lastname,
+        _id: findUser._id,
         text: "Authentification réussi"
       });
     } catch (error) {
@@ -127,7 +129,8 @@ async function edit(req, res) {
         text: "Succès",
         token: userObject.getToken(),
         nom: firstname,
-        prenom: lastname
+        prenom: lastname,
+        _id: userObject._id
       });
     }
     else{

@@ -69,7 +69,7 @@ export default {
     return axios.get(`${burl}/post/` + id, { headers: headers });
   },
 
-  addLike: function(postId){
+  addLikePost: function(postId){
     const token = localStorage.getItem("token")
     return axios.patch(`${burl}/post/addLike`,{
       postId,
@@ -78,7 +78,7 @@ export default {
     , { headers: headers });
   },
 
-  addDislike: function(postId){
+  addDislikePost: function(postId){
     const token = localStorage.getItem("token")
     return axios.patch(`${burl}/post/addDislike`,{
       postId,
@@ -87,7 +87,7 @@ export default {
     , { headers: headers });
   },
 
-  addSignalement: function(postId){
+  addSignalementPost: function(postId){
     const token = localStorage.getItem("token")
     return axios.patch(`${burl}/post/addSignalement`,{
       postId,
@@ -96,8 +96,101 @@ export default {
     , { headers: headers });
   },
 
+  deleteLikePost: function(postId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/post/deleteLike`,{
+      postId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  deleteDislikePost: function(postId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/post/deleteDislike`,{
+      postId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  deleteSignalementPost: function(postId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/post/deleteSignalement`,{
+      postId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  addLikeReponse: function(reponseId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/reponse/addLike`,{
+      reponseId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  addDislikeReponse: function(reponseId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/reponse/addDislike`,{
+      reponseId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  addSignalementReponse: function(reponseId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/reponse/addSignalement`,{
+      reponseId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  deleteLikeReponse: function(reponseId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/reponse/deleteLike`,{
+      reponseId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  deleteDislikeReponse: function(reponseId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/reponse/deleteDislike`,{
+      reponseId,
+      token
+    }
+    , { headers: headers });
+  },
+
+  deleteSignalementReponse: function(reponseId){
+    const token = localStorage.getItem("token")
+    return axios.patch(`${burl}/reponse/deleteSignalement`,{
+      reponseId,
+      token
+    }
+    , { headers: headers });
+  },
+
   createReponse: function(libelle, token, postId){
     return axios.post(`${burl}/reponse/create`, { libelle, token, postId }, { headers: headers });
+  },
+
+  getAllNotification: function() {
+    const token = localStorage.getItem("token");
+    return axios.get(`${burl}/notification/allNotification/` + token, { headers: headers });
+  },
+
+  notificationVue: function(notificationId){
+    return axios.patch(`${burl}/notification/vue`,{
+      notificationId
+    }
+    , { headers: headers });
   }
 
 

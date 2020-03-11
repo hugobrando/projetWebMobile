@@ -97,6 +97,7 @@ export class Information extends React.Component {
               localStorage.setItem("token", data.token);
               localStorage.setItem("nom", data.nom);
               localStorage.setItem("prenom", data.prenom);
+              localStorage.setItem("_id", data._id);
               window.location = "/dashboard";
           } catch (error) {
               console.error(error);

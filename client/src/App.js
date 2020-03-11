@@ -7,6 +7,8 @@ import { PrivateRoute } from "./components/PrivateRoute.js";
 import { Information } from "./components/Perso/Information.js"
 import { CreatePost } from "./components/Post/CreatePost.js"
 import { ShowPost } from "./components/Post/ShowPost.js"
+import { Notification } from "./components/Notification/Notification.js"
+
 import "./App.css";
 
 class App extends Component {
@@ -21,6 +23,7 @@ class App extends Component {
             <PrivateRoute path="/dashboard" component={Dashboard} />
             <PrivateRoute path="/information" component={Information} />
             <PrivateRoute path="/createPost" component={CreatePost} />
+            <PrivateRoute path="/notification" component={Notification} />
           </Switch>
         </div>
       </div>

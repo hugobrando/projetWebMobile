@@ -191,7 +191,18 @@ export default {
       notificationId
     }
     , { headers: headers });
+  },
+
+
+  //Parti Admin
+
+  isAdmin: function(){
+    const token = localStorage.getItem("token");
+    return axios.get(`${burl}/user/isAdmin/` + token, { headers: headers });
+  },
+
+  getAllPostSignaled: function() {
+    const token = localStorage.getItem("token");
+    return axios.get(`${burl}/post/get/getAllPostSignaled/`+token, { headers: headers });
   }
-
-
 };

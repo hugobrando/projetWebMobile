@@ -165,6 +165,21 @@ async function info(req, res) {
     tel: user.tel
   });
 }
+
+async function isAdmin(req, res) {
+  const { token } = req.params;
+  if (!token) {
+    //Le cas où l'email ou bien le password ne serait pas soumit ou nul
+    return res.status(400).json({
+      text: "Requête invalide"
+    });
+  }
+  const user = jwt.decode(token, config.secret);
+  return res.status(200).json({
+    text: "Succès",
+    isAdmin: user.isAdmin
+  });
+}
   
   
 //On exporte nos fonctions
@@ -173,3 +188,4 @@ exports.login = login;
 exports.signup = signup;
 exports.edit = edit;
 exports.info = info;
+exports.isAdmin = isAdmin;

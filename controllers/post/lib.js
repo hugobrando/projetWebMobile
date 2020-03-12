@@ -317,6 +317,35 @@ async function create(req, res) {
     
   }
 
+  async function getAllPostSignaled(req, res) {
+    const { token } = req.params;
+    console.log(token);
+    const user = jwt.decode(token, config.secret);
+    console.log("allPost");
+    if(user.isAdmin){
+      try {
+        console.log("allPost");
+        var allPost = await Post.find({ "signalement.0": { "$exists": true } }).sort({create: -1});
+        console.log(allPost);
+        for(var i in allPost){
+          var post = allPost[i];
+          var u = await User.findOne({ _id: post.userId }).select('pseudo');
+          allPost[i].userId = u;
+        };
+        console.log(allPost);
+        return res.status(200).json(allPost);
+      } catch (error) {
+          
+          return res.status(500).json({ text: "La requête a echoué" });
+      }
+    }
+    else{
+      return res.status(401).json({ text: "Vous n'êtes pas autorisé" });
+    }
+    
+    
+  }
+
   //On exporte nos fonctions
   
 exports.create = create;
@@ -330,6 +359,7 @@ exports.addSignalement = addSignalement;
 exports.deleteSignalement = deleteSignalement;
 exports.getAllResponse = getAllResponse;
 exports.getAllPost = getAllPost;
+exports.getAllPostSignaled = getAllPostSignaled;
 
 //fonction interne
 

@@ -4,10 +4,12 @@ import { Dashboard } from "./components/Dashboard/Dashboard.js";
 import { Login } from "./components/Login/Login.js";
 import { Signup } from "./components/Signup/Signup.js";
 import { PrivateRoute } from "./components/PrivateRoute.js";
+import { AdminRoute } from "./components/AdminRoute.js";
 import { Information } from "./components/Perso/Information.js"
 import { CreatePost } from "./components/Post/CreatePost.js"
 import { ShowPost } from "./components/Post/ShowPost.js"
 import { Notification } from "./components/Notification/Notification.js"
+import { AdminPage } from "./components/Admin/AdminPage.js"
 
 import "./App.css";
 
@@ -24,6 +26,7 @@ class App extends Component {
             <PrivateRoute path="/information" component={Information} />
             <PrivateRoute path="/createPost" component={CreatePost} />
             <PrivateRoute path="/notification" component={Notification} />
+            <AdminRoute path="/adminPage" component={AdminPage} />
           </Switch>
         </div>
       </div>

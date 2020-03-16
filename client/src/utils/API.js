@@ -193,6 +193,11 @@ export default {
     , { headers: headers });
   },
 
+  getAllMyPosts: function() {
+    const token = localStorage.getItem("token");
+    return axios.get(`${burl}/post/get/getAllMyPosts/`+token, { headers: headers });
+  },
+
 
   //Parti Admin
 

@@ -1,10 +1,9 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import ReactDOM from 'react-dom';
 
 import API from "../../utils/API";
 
-export class Dashboard extends React.Component {
+export class MyPosts extends React.Component {
 
   constructor(props) {
     super(props);
@@ -12,12 +11,8 @@ export class Dashboard extends React.Component {
       allPost: []
     };
 
-    this.loadAllPost = this.loadAllPost.bind(this);
-    this.like = this.like.bind(this);
-    this.isAdmin = this.isAdmin.bind(this);
-
-    this.loadAllPost();
-    this.isAdmin();
+    this.loadAllMyPosts = this.loadAllMyPosts.bind(this);
+    this.loadAllMyPosts();
   }
   
 
@@ -34,78 +29,45 @@ export class Dashboard extends React.Component {
     window.location = "/notification";
   };
 
-  like = async (element) => {
-    if(element.like.includes(localStorage.getItem("_id"))){
-      await API.deleteLikePost(element._id);
-    }
-    else{
-      await API.addLikePost(element._id);
-    }
-    this.loadAllPost();
-  };
-  
-  dislike = async (element) => {
-    if(element.dislike.includes(localStorage.getItem("_id"))){
-      await API.deleteDislikePost(element._id);
-    }
-    else{
-      await API.addDislikePost(element._id);
-    } 
-    this.loadAllPost();
-  };
-
-  signaler = async (element) => {
-    if(element.signalement.includes(localStorage.getItem("_id"))){
-      await API.deleteSignalementPost(element._id);
-    }
-    else{
-      await API.addSignalementPost(element._id);
-    } 
-    this.loadAllPost();
-  };
-
   post = () => {
     window.location = "/createPost";
   };
 
-  myPosts = () => {
-    window.location = "/myPosts";
+  homePage = () => {
+    window.location = "/dashboard";
   };
 
-  loadAllPost = async () => {
-    const res = API.getAllPost();
+  loadAllMyPosts = async () => {
+    const res = API.getAllMyPosts();
     this.setState({
       allPost: (await res).data
     });
   };
-
-  isAdmin = async () => {
-    if(await API.isAdmin()){
-      ReactDOM.render(
-        React.createElement('div', {}, 
-        <Button block bsSize="large" type="submit" onClick={this.adminPage}>
-        Admin
-        </Button>),
-        document.getElementById("adminButton")
-      );
-    }
-  };
-
-  adminPage = async () => {
-    if(await API.isAdmin()){
-      window.location = "/adminPage";
+/* like ?
+  signalementDesc = () => {
+    const { allPost } = this.state;  
+    allPost.sort(function (a, b) {
+                    return b.signalement.length - a.signalement.length;
+                    });
+    this.setState({
+        allPost
+        });
     };
-  }
+
+    signalementAsc = () => {
+        const { allPost } = this.state;  
+        allPost.sort(function (a, b) {
+                        return a.signalement.length - b.signalement.length;
+                        });
+        this.setState({
+            allPost
+            });
+        };*/
 
   render() {
     const { allPost } = this.state;
     return (
       <div>
-        <nav id="navbar-custom" class="navbar navbar-default navbar-fixed-top">
-            <div class="navbar-header">
-                <a class="navbar-brand primary">Association Anti-sexisme</a>
-            </div>
-        </nav>
       <nav id="navbar-custom" class="navbar navbar-default navbar-fixed-left">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Filtres</a>
@@ -143,6 +105,9 @@ export class Dashboard extends React.Component {
   </div>
 </form>
     </div>
+             <Button block bsSize="large" type="submit" onClick={this.homePage}>
+              Fil d'actualité
+            </Button>
             <Button  block bsSize="large" type="submit" onClick={this.disconnect}>
               Se déconnecter
             </Button>
@@ -155,14 +120,16 @@ export class Dashboard extends React.Component {
             <Button block bsSize="large" type="submit" onClick={this.notification}>
               Notifications
             </Button>
-            <Button block bsSize="large" type="submit" onClick={this.myPosts}>
-              Mes Posts
-            </Button>
-            <div id="adminButton"></div>
         </nav>
       <div className="Dashboard">
-        <h1>Dashboard</h1>
+        <h1>Mes Posts</h1>
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
+        <Button block bsSize="small" type="submit" onClick={this.signalementDesc}>
+              Posts signalés descendants
+        </Button>
+        <Button block bsSize="small" type="submit" onClick={this.signalementAsc}>
+              Posts signalés ascendants
+        </Button>
       </div>
       {allPost.map(element => 
       <div class="list-group">
@@ -174,18 +141,16 @@ export class Dashboard extends React.Component {
           <p class="mb-1">{element.libelle}</p>
           <small>Categorie : {element.categorie}</small>
         </a>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.like(element)}>
+          <button type="button" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
           </button>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislike(element)}>
+          <button type="button" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
           </button>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.signaler(element)}>
+          <button type="button" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
           </button>
-        
-        
-        
+               
       </div>)
       
         

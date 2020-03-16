@@ -390,6 +390,23 @@ async function create(req, res) {
     
   }
 
+  async function getAllMyPosts(req, res) {
+    const { token } = req.params;
+    try {
+      const user = jwt.decode(token, config.secret);
+      var allPost = await Post.find({ "userId": user._id }).sort({create: -1});
+      var u = await User.findOne({ _id: user._id }).select('pseudo');
+      for(var i in allPost){
+        allPost[i].userId = u;
+      };
+      return res.status(200).json(allPost);
+    } catch (error) {
+        
+        return res.status(500).json({ text: "La requête a echoué" });
+    }
+    
+  }
+
   //On exporte nos fonctions
   
 exports.create = create;
@@ -405,6 +422,7 @@ exports.getAllResponse = getAllResponse;
 exports.getAllPost = getAllPost;
 exports.getAllPostSignaled = getAllPostSignaled;
 exports.delete = deletePost;
+exports.getAllMyPosts = getAllMyPosts;
 
 //fonction interne
 

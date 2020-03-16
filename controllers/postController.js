@@ -14,4 +14,5 @@ module.exports = function (app) {
     app.patch('/addSignalement',post.addSignalement);
     app.patch('/deleteSignalement',post.deleteSignalement);
     app.get('/get/getAllPostSignaled/:token',post.getAllPostSignaled);
+    app.get('/get/getAllMyPosts/:token',post.getAllMyPosts);
 }

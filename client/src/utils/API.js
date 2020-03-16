@@ -204,5 +204,15 @@ export default {
   getAllPostSignaled: function() {
     const token = localStorage.getItem("token");
     return axios.get(`${burl}/post/get/getAllPostSignaled/`+token, { headers: headers });
+  },
+
+  deletePost: function(postId){
+    const token = localStorage.getItem("token");
+    return axios.delete(`${burl}/post/delete`, {
+      data : { 
+        postId: postId,
+        token: token },
+      headers: headers 
+    });
   }
 };

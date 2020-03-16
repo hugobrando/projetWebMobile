@@ -164,7 +164,10 @@ export class ShowPost extends React.Component {
         const id = post._id;
         const { data } = await API.createReponse(reponseAdd, token, id);        
         //reload les reponseAdds    
-        this.loadReponse(id);
+        this.setState({
+          reponseAdd: ""
+        })
+        this.loadReponse(id);       
       } catch (error) {
         console.error(error);
         ReactDOM.render(

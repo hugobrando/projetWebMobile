@@ -75,7 +75,7 @@ export class Dashboard extends React.Component {
     const { allPost } = this.state;
     return (
       <div>
-        <nav id="navbar-custom" class="navbar navbar-default">
+        <nav id="navbar-custom" class="navbar navbar-default navbar-fixed-top">
             <div class="navbar-header">
                 <a class="navbar-brand primary">Association Anti-sexisme</a>
             </div>

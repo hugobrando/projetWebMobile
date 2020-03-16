@@ -44,6 +44,11 @@ export class AdminPage extends React.Component {
     });
   };
 
+  deletePost = async (post) => {
+    await API.deletePost(post._id);
+    this.loadAllPost();
+  };
+
   signalementDesc = () => {
     const { allPost } = this.state;  
     allPost.sort(function (a, b) {
@@ -149,6 +154,9 @@ export class AdminPage extends React.Component {
           </button>
           <button type="button" class="btn btn-default btn-sm">
             <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
+          </button>
+          <button type="button" class="btn btn-default btn-sm btn-danger" onClick={() => this.deletePost(element)}>
+            <span class="glyphicon glyphicon-exclamation-sign"></span> Supprimer !
           </button>
         
         

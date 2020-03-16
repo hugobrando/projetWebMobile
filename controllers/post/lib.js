@@ -1,5 +1,6 @@
 const Post = require("../../schema/post.js");
 const Reponse = require("../../schema/reponse.js");
+const Notification = require("../../schema/notification.js");
 const User = require("../../schema/user.js");
 const jwt = require("jwt-simple");
 const config = require("../../config/config");
@@ -319,20 +320,15 @@ async function create(req, res) {
 
   async function getAllPostSignaled(req, res) {
     const { token } = req.params;
-    console.log(token);
     const user = jwt.decode(token, config.secret);
-    console.log("allPost");
     if(user.isAdmin){
       try {
-        console.log("allPost");
         var allPost = await Post.find({ "signalement.0": { "$exists": true } }).sort({create: -1});
-        console.log(allPost);
         for(var i in allPost){
           var post = allPost[i];
           var u = await User.findOne({ _id: post.userId }).select('pseudo');
           allPost[i].userId = u;
         };
-        console.log(allPost);
         return res.status(200).json(allPost);
       } catch (error) {
           
@@ -343,6 +339,54 @@ async function create(req, res) {
       return res.status(401).json({ text: "Vous n'êtes pas autorisé" });
     }
     
+    
+  }
+
+  async function deletePost(req, res) {
+    const { postId, token } = req.body;
+    if (!postId || !token) {
+      //Le cas où ya pas de param
+      return res.status(400).json({
+        text: "Requête invalide"
+      });
+    }
+    const user = jwt.decode(token, config.secret);
+    if(user.isAdmin){
+      try {
+        
+        
+        // delete toutes les notifs de ce post
+        Notification.find({ postId: postId }, async function(err, data){
+          console.log(data)
+          for(var n in data){
+            Notification.deleteOne({ _id: data[0]._id}).then(() => console.log("notification suprimé"));
+            // on cherche l'user qui a poster le post pour lui suprimmer sa notif 
+            var post = await Post.find({ _id: data[0].postId});
+            User.find({ _id: post[0].userId},function(err, user){
+              const index = user[0].notifications.indexOf(data[0]._id);
+              if (index > -1) {
+                user[0].notifications.splice(index, 1);
+              }
+              user[0].save().then(() => console.log("surprimé de la liste des notif de l'user"));
+            })
+          }
+        }).then(() => console.log("toutes les notifications suprimmés"));
+        // delete toutes les reponses de ce post
+        await Post.find({ _id: postId }, function(err, data){
+          for(var r in data[0].reponses){
+            Reponse.deleteOne({ _id: data[0].reponses[r]}).then(() => console.log("reponse suprimmé"));
+          }
+        })
+        // delete finalement le post
+        await Post.deleteOne({ _id: postId });
+        return res.status(200).json({ text: "Post suprimmé" });
+      } catch (error) {
+          return res.status(500).json({ text: "La requête a echoué" });
+      }
+    }
+    else{
+      return res.status(401).json({ text: "Vous n'êtes pas autorisé" });
+    }
     
   }
 
@@ -360,6 +404,7 @@ exports.deleteSignalement = deleteSignalement;
 exports.getAllResponse = getAllResponse;
 exports.getAllPost = getAllPost;
 exports.getAllPostSignaled = getAllPostSignaled;
+exports.delete = deletePost;
 
 //fonction interne
 

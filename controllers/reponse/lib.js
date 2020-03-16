@@ -354,12 +354,14 @@ async function alreadyNotif(user,postId){
   for(var i in user.notifications){
     var notification = user.notifications[i];
     var n = await Notification.findOne({ _id: notification });
-    if(n.postId.equals(postId)){
-      if(n.vue){
-        n.vue = false;
-        n.save();
+    if(n){
+      if(n.postId.equals(postId)){
+        if(n.vue){
+          n.vue = false;
+          n.save();
+        }
+        already = true;
       }
-      already = true;
     }
   };
 

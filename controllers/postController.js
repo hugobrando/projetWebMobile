@@ -2,7 +2,7 @@ const post = require('./post/lib.js');
 
 module.exports = function (app) {
     app.post('/create',post.create);
-    ///app.delete('/delete',post.delete);
+    app.delete('/delete',post.delete);
     app.patch('/update',post.update);
     app.get('/:postId',post.get);
     app.get('/get/allPost',post.getAllPost);

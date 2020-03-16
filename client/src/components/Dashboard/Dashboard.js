@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
+import ReactDOM from 'react-dom';
 
 import API from "../../utils/API";
 
@@ -13,7 +14,10 @@ export class Dashboard extends React.Component {
 
     this.loadAllPost = this.loadAllPost.bind(this);
     this.like = this.like.bind(this);
+    this.isAdmin = this.isAdmin.bind(this);
+
     this.loadAllPost();
+    this.isAdmin();
   }
   
 
@@ -70,6 +74,24 @@ export class Dashboard extends React.Component {
       allPost: (await res).data
     });
   };
+
+  isAdmin = async () => {
+    if(await API.isAdmin()){
+      ReactDOM.render(
+        React.createElement('div', {}, 
+        <Button block bsSize="large" type="submit" onClick={this.adminPage}>
+        Admin
+        </Button>),
+        document.getElementById("adminButton")
+      );
+    }
+  };
+
+  adminPage = async () => {
+    if(await API.isAdmin()){
+      window.location = "/adminPage";
+    };
+  }
 
   render() {
     const { allPost } = this.state;
@@ -129,6 +151,7 @@ export class Dashboard extends React.Component {
             <Button block bsSize="large" type="submit" onClick={this.notification}>
               Notifications
             </Button>
+            <div id="adminButton"></div>
         </nav>
       <div className="Dashboard">
         <h1>Dashboard</h1>

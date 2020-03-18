@@ -77,6 +77,7 @@ export class CreatePost extends React.Component {
           <ControlLabel>Libelle</ControlLabel>
           <FormControl 
             autoFocus
+            componentClass="textarea"
             type="text"
             value={libelle}
             onChange={this.handleChange}

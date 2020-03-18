@@ -46,8 +46,8 @@ async function create(req, res) {
   }
 
   async function update(req, res) {
-    const { postId, description, libelle, categorie } = req.body;
-    if (!postId ||!description || !libelle || !categorie) {
+    const { postId, description, libelle, categorie, token } = req.body;
+    if (!postId ||!description || !libelle || !categorie || !token) {
       //Le cas où les infos sont vide
       return res.status(400).json({
         text: "Requête invalide"
@@ -56,22 +56,31 @@ async function create(req, res) {
    
     
     try {
+      const user= jwt.decode(token, config.secret);
       const post = await Post.findOne({ _id: postId });
-      if (post){
-        post.description = description;
-        post.libelle = libelle;
-        post.categorie = categorie;
+      if(user._id == post.userId){ // seul le createur peut modifier sont post
 
-        await post.save();
-        return res.status(200).json({
-          text: "Succès",
-        });
+        
+        if (post){
+          post.description = description;
+          post.libelle = libelle;
+          post.categorie = categorie;
+  
+          await post.save();
+          return res.status(200).json({
+            text: "Succès",
+          });
+        }
+        else{
+          return res.status(400).json({
+            text: "La requête de modification a echoué"
+          });
+        }
       }
       else{
-        return res.status(400).json({
-          text: "La requête de modification a echoué"
-        });
+        return res.status(401).json({ text: "Vous n'êtes pas autorisé !" });
       }
+
       
     } catch (error) {
       return res.status(500).json({ text: "La requête a echoué" });

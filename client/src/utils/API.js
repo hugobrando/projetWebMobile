@@ -57,6 +57,10 @@ export default {
     return axios.post(`${burl}/post/create`, send, { headers: headers });
   },
 
+  updatePost: function(send) {
+    return axios.patch(`${burl}/post/update`, send, { headers: headers });
+  },
+
   getAllPost: function() {
     return axios.get(`${burl}/post/get/allPost`, { headers: headers });
   },

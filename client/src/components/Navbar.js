@@ -4,8 +4,14 @@ import { Button, Col, Grid } from "react-bootstrap";
 import ReactDOM from 'react-dom';
 
 class Navbar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+    }
 
 render() {
+    const {valueResearch}= this.state;
     return (
         <div>
             <Col md={3}>
@@ -13,10 +19,7 @@ render() {
                     <div class="navbar-header">
                         <a class="navbar-brand" href="#">Filtres</a>
                     </div>
-                    <input type="text" class="form-control" id="validationTooltip01" placeholder="Rechercher" required></input>
-                    <Button block bsSize="small" type="submit">
-                        Rechercher
-                    </Button>
+                    <input type="text" class="form-control" id="validationTooltip01" placeholder="Rechercher" required value={valueResearch} onChange={this.filterPost}></input>
                     <div class="checkbox">
                         <label>
                         <input type="checkbox" data-toggle="toggle"></input>

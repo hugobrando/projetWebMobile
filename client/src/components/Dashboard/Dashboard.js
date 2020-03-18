@@ -77,7 +77,8 @@ export class Dashboard extends React.Component {
   loadAllPost = async () => {
     const res = API.getAllPost();
     this.setState({
-      allPost: (await res).data
+      allPost: (await res).data,
+      allPostLoad: (await res).data
     });
   };
 
@@ -99,10 +100,28 @@ export class Dashboard extends React.Component {
     };
   }
 
+  //recherche
+
+  filterPost = (event) => {
+    this.setState({valueResearch: event.target.value});
+    if(event.target.value){
+      this.setState({focused: true});
+      var updatedPosts = this.state.allPostLoad;
+      updatedPosts = updatedPosts.filter(function(item){
+        return ((item.description.toLowerCase().search(event.target.value.toLowerCase()) !== -1) || (item.libelle.toLowerCase().search(event.target.value.toLowerCase()) !== -1));//dans le titre ou le libelle
+      });
+      this.setState({allPost: updatedPosts});
+    }
+    else{
+      this.setState({allPost: this.state.allPostLoad});
+    }
+    
+  };
+
   render() {
-    const { allPost } = this.state;
+    const { allPost, valueResearch } = this.state;
     return (
-      
+    
       <Grid>
         <Row mt>
         <Navbar/>
@@ -110,7 +129,7 @@ export class Dashboard extends React.Component {
             <div className="Dashboard">
               <h1>Polytech Contre le Sexisme</h1>
               <h2>Bienvenue {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
-            </div>
+</div>
             {allPost.map(element => 
               <div class="list-group">
               <a href={"post/" + element._id} class="list-group-item list-group-item-action active">

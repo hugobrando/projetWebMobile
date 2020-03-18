@@ -43,26 +43,26 @@ export class MyPosts extends React.Component {
       allPost: (await res).data
     });
   };
-/* like ?
-  signalementDesc = () => {
+
+  likeDesc = () => {
     const { allPost } = this.state;  
     allPost.sort(function (a, b) {
-                    return b.signalement.length - a.signalement.length;
+                    return b.like.length - a.like.length;
                     });
     this.setState({
         allPost
         });
     };
 
-    signalementAsc = () => {
-        const { allPost } = this.state;  
-        allPost.sort(function (a, b) {
-                        return a.signalement.length - b.signalement.length;
-                        });
-        this.setState({
-            allPost
-            });
-        };*/
+  likeAsc = () => {
+      const { allPost } = this.state;  
+      allPost.sort(function (a, b) {
+                      return a.like.length - b.like.length;
+                      });
+      this.setState({
+          allPost
+          });
+      };
 
   render() {
     const { allPost } = this.state;
@@ -124,11 +124,11 @@ export class MyPosts extends React.Component {
       <div className="Dashboard">
         <h1>Mes Posts</h1>
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
-        <Button block bsSize="small" type="submit" onClick={this.signalementDesc}>
-              Posts signalés descendants
+        <Button block bsSize="small" type="submit" onClick={this.likeDesc}>
+              Posts liké descendants
         </Button>
-        <Button block bsSize="small" type="submit" onClick={this.signalementAsc}>
-              Posts signalés ascendants
+        <Button block bsSize="small" type="submit" onClick={this.likeAsc}>
+              Posts liké ascendants
         </Button>
       </div>
       {allPost.map(element => 

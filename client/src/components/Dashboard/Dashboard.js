@@ -23,19 +23,6 @@ export class Dashboard extends React.Component {
   }
   
 
-  disconnect = () => {
-    API.logout();
-    window.location = "/";
-  };
-
-  information = () => {
-    window.location = "/information";
-  };
-
-  notification = () => {
-    window.location = "/notification";
-  };
-
   like = async (element) => {
     if(element.like.includes(localStorage.getItem("_id"))){
       await API.deleteLikePost(element._id);
@@ -66,14 +53,7 @@ export class Dashboard extends React.Component {
     this.loadAllPost();
   };
 
-  post = () => {
-    window.location = "/createPost";
-  };
-
-  myPosts = () => {
-    window.location = "/myPosts";
-  };
-
+  
   loadAllPost = async () => {
     const res = API.getAllPost();
     this.setState({

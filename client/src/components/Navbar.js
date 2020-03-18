@@ -2,6 +2,7 @@ import React from "react";
 import { Component } from 'react';
 import { Button, Col, Grid } from "react-bootstrap";
 import ReactDOM from 'react-dom';
+import API from "../utils/API";
 
 class Navbar extends React.Component {
     constructor(props) {
@@ -9,6 +10,27 @@ class Navbar extends React.Component {
         this.state = {
         };
     }
+
+    disconnect = () => {
+        API.logout();
+        window.location = "/";
+      };
+    
+      information = () => {
+        window.location = "/information";
+      };
+    
+      notification = () => {
+        window.location = "/notification";
+      };
+      post = () => {
+        window.location = "/createPost";
+      };
+    
+      myPosts = () => {
+        window.location = "/myPosts";
+      };
+    
 
 render() {
     const {valueResearch}= this.state;

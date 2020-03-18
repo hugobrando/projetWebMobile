@@ -75,7 +75,8 @@ export class Dashboard extends React.Component {
   loadAllPost = async () => {
     const res = API.getAllPost();
     this.setState({
-      allPost: (await res).data
+      allPost: (await res).data,
+      allPostLoad: (await res).data
     });
   };
 
@@ -97,8 +98,26 @@ export class Dashboard extends React.Component {
     };
   }
 
+  //recherche
+
+  filterPost = (event) => {
+    this.setState({valueResearch: event.target.value});
+    if(event.target.value){
+      this.setState({focused: true});
+      var updatedPosts = this.state.allPostLoad;
+      updatedPosts = updatedPosts.filter(function(item){
+        return ((item.description.toLowerCase().search(event.target.value.toLowerCase()) !== -1) || (item.libelle.toLowerCase().search(event.target.value.toLowerCase()) !== -1));//dans le titre ou le libelle
+      });
+      this.setState({allPost: updatedPosts});
+    }
+    else{
+      this.setState({allPost: this.state.allPostLoad});
+    }
+    
+  };
+
   render() {
-    const { allPost } = this.state;
+    const { allPost, valueResearch } = this.state;
     return (
       <div>
         <nav id="navbar-custom" class="navbar navbar-default navbar-fixed-top">
@@ -110,10 +129,8 @@ export class Dashboard extends React.Component {
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Filtres</a>
             </div>
-            <input type="text" class="form-control" id="validationTooltip01" placeholder="Rechercher" required></input>
-            <Button block bsSize="small" type="submit">
-              Rechercher
-            </Button>
+            <input type="text" class="form-control" id="validationTooltip01" placeholder="Rechercher" required value={valueResearch} onChange={this.filterPost}></input>
+
             <div class="checkbox">
               <label>
                 <input type="checkbox" data-toggle="toggle"></input>

@@ -89,13 +89,13 @@ export class CreatePost extends React.Component {
           <FormControl componentClass="select" placeholder="select" value={categorie}
                   onChange={this.handleChange}>
               <option value="...">Selectionner une categorie</option>
-              <option value="Personnel">personnel</option>
-              <option value="Livre">livre</option>
-              <option value="Film">film</option>
-              <option value="Humour">humour</option>
-              <option value="Citation">citation</option>
-              <option value="Reseaux">reseaux</option>
-              <option value="Autre">autres</option>
+              <option value="Personnel">Personnel</option>
+              <option value="Livre">Livre</option>
+              <option value="Film">Film</option>
+              <option value="Humour">Humour</option>
+              <option value="Citation">Citation</option>
+              <option value="Reseaux">Réseaux</option>
+              <option value="Autre">Autres</option>
           </FormControl>
                   
           <div id="categorieError"></div>

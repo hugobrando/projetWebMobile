@@ -11,15 +11,18 @@ export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      allPost: []
+      allPost: [],
+      selectCategorie: "",
+      selectLike: "0"
     };
 
     this.loadAllPost = this.loadAllPost.bind(this);
     this.like = this.like.bind(this);
-    this.isAdmin = this.isAdmin.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.filterPost = this.filterPost.bind(this);
+    
 
-    this.loadAllPost();
-    this.isAdmin();
+    this.loadAllPost();  
   }
   
 
@@ -57,22 +60,11 @@ export class Dashboard extends React.Component {
   loadAllPost = async () => {
     const res = API.getAllPost();
     this.setState({
-      allPost: (await res).data,
-      allPostLoad: (await res).data
+      allPost: (await res).data, // les post sue l'on va traiter par la suite pour la recherche
+      allPostLoad: (await res).data //on enregistre ce que l'on a recu dans le state
     });
   };
 
-  isAdmin = async () => {
-    if(await API.isAdmin()){
-      ReactDOM.render(
-        React.createElement('div', {}, 
-        <Button block bsSize="large" type="submit" onClick={this.adminPage}>
-        Admin
-        </Button>),
-        document.getElementById("adminButton")
-      );
-    }
-  };
 
   adminPage = async () => {
     if(await API.isAdmin()){
@@ -82,21 +74,27 @@ export class Dashboard extends React.Component {
 
   //recherche
 
-  filterPost = (event) => {
-    this.setState({valueResearch: event.target.value});
-    if(event.target.value){
-      this.setState({focused: true});
+  filterPost = () => {
+    
+    // input de recherche
+    const event = document.getElementById("rechercheInput")
+    this.setState({valueResearch: event.value});
+    if(event.value){
       var updatedPosts = this.state.allPostLoad;
       updatedPosts = updatedPosts.filter(function(item){
-        return ((item.description.toLowerCase().search(event.target.value.toLowerCase()) !== -1) || (item.libelle.toLowerCase().search(event.target.value.toLowerCase()) !== -1));//dans le titre ou le libelle
+        return ((item.description.toLowerCase().search(event.value.toLowerCase()) !== -1) || (item.libelle.toLowerCase().search(event.value.toLowerCase()) !== -1));//dans le titre ou le libelle
       });
       this.setState({allPost: updatedPosts});
     }
     else{
       this.setState({allPost: this.state.allPostLoad});
     }
-    
   };
+
+  handleSelect = (e) => {
+    this.setState({[e.target.id]: e.target.value});
+  };
+  
 
   render() {
     const { allPost, valueResearch } = this.state;
@@ -104,32 +102,38 @@ export class Dashboard extends React.Component {
     
       <Grid>
         <Row mt>
-        <Navbar/>
+        <Navbar valueResearch = {valueResearch} filter={this.filterPost} selectCategorie={this.handleSelect}/>
           <Col md={9}>
             <div className="Dashboard">
               <h1>Polytech Contre le Sexisme</h1>
               <h2>Bienvenue {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
 </div>
-            {allPost.map(element => 
-              <div class="list-group">
-              <a href={"post/" + element._id} class="list-group-item list-group-item-action active">
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">{element.description}</h5>
-                  <small>Posté par {element.userId.pseudo} le {element.create}</small>
-                </div>
-                <p class="mb-1">{element.libelle}</p>
-                <small>Categorie : {element.categorie}</small>
-              </a>
-                <button type="button" class="btn btn-default btn-sm" onClick={() => this.like(element)}>
-                  <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
-                </button>
-                <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislike(element)}>
-                  <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
-                </button>
-                <button type="button" class="btn btn-default btn-sm" onClick={() => this.signaler(element)}>
-                  <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
-                </button>
-            </div>
+            {allPost.map(element => {
+              if((this.state.selectCategorie == element.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.like.length)){
+                return(
+                      <div class="list-group">
+                        <a href={"post/" + element._id} class="list-group-item list-group-item-action active">
+                          <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{element.description}</h5>
+                            <small>Posté par {element.userId.pseudo} le {element.create}</small>
+                          </div>
+                          <p class="mb-1">{element.libelle}</p>
+                          <small>Categorie : {element.categorie}</small>
+                        </a>
+                          <button type="button" class="btn btn-default btn-sm" onClick={() => this.like(element)}>
+                            <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
+                          </button>
+                          <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislike(element)}>
+                            <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
+                          </button>
+                          <button type="button" class="btn btn-default btn-sm" onClick={() => this.signaler(element)}>
+                            <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
+                          </button>
+                      </div>
+                )
+              }
+            }
+              
             )}
           </Col>
         </Row>

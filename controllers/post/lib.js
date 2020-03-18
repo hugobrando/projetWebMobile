@@ -57,9 +57,10 @@ async function create(req, res) {
     
     try {
       const user= jwt.decode(token, config.secret);
-      if(user._id == postId.userId){ // seul le createur peut modifier sont post
+      const post = await Post.findOne({ _id: postId });
+      if(user._id == post.userId){ // seul le createur peut modifier sont post
 
-        const post = await Post.findOne({ _id: postId });
+        
         if (post){
           post.description = description;
           post.libelle = libelle;

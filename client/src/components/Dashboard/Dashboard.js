@@ -65,19 +65,12 @@ export class Dashboard extends React.Component {
     });
   };
 
-
-  adminPage = async () => {
-    if(await API.isAdmin()){
-      window.location = "/adminPage";
-    };
-  }
-
   //recherche
 
-  filterPost = () => {
+  filterPost = (e) => {
     
     // input de recherche
-    const event = document.getElementById("rechercheInput")
+    const event = e.target
     this.setState({valueResearch: event.value});
     if(event.value){
       var updatedPosts = this.state.allPostLoad;
@@ -107,7 +100,7 @@ export class Dashboard extends React.Component {
             <div className="Dashboard">
               <h1>Polytech Contre le Sexisme</h1>
               <h2>Bienvenue {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
-</div>
+            </div>
             {allPost.map(element => {
               if((this.state.selectCategorie == element.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.like.length)){
                 return(
@@ -137,7 +130,7 @@ export class Dashboard extends React.Component {
             )}
           </Col>
         </Row>
-        </Grid>
+      </Grid>
       
       
     );

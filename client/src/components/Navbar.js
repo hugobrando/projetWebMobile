@@ -34,6 +34,16 @@ class Navbar extends React.Component {
     window.location = "/myPosts";
     };
 
+    homePage = () => {
+    window.location = "/dashboard";
+    };
+    
+    adminPage = async () => {
+        if(await API.isAdmin()){
+          window.location = "/adminPage";
+        };
+      }
+
       
     isAdmin = async () => {
     if(await API.isAdmin()){
@@ -64,59 +74,55 @@ render() {
         <div>
             <Col md={3}>
                 <nav id="navbar-custom" class="navbar fixed-left">
-                    <div class="navbar-header">
-                        <a class="navbar-brand">Filtres</a>
+                    <div>
+                        <div class="navbar-header">
+                            <a class="navbar-brand">Filtres</a>
+                        </div>
+                        <input type="text" class="form-control" id="rechercheInput" placeholder="Rechercher" required value={this.props.valueResearch} onChange={this.handleChange}></input>
+                        
+                        <label for="Select1">tri des posts</label>
+                        <select class="form-control" id="selectLike"  onChange={this.handleSelect}>
+                            <option value = "0">Tout nombre de like</option>
+                            <option value = "5">+5 likes</option>
+                            <option value = "10">+10 likes</option>
+                            <option value = "20">+20 likes</option>
+                            <option value = "50">+50 likes</option>
+                            <option value = "100">+100 likes</option>
+                        </select>
+                        <select class="form-control" id="selectCategorie" onChange={this.handleSelect}>
+                            <option value = "">Toutes Catégories</option>
+                            <option value="Personnel">Personnel</option>
+                            <option value="Livre">Livre</option>
+                            <option value="Film">Film</option>
+                            <option value="Humour">Humour</option>
+                            <option value="Citation">Citation</option>
+                            <option value="Reseaux">Réseaux</option>
+                            <option value="Autre">Autres</option>
+                        </select>
                     </div>
-                    <input type="text" class="form-control" id="rechercheInput" placeholder="Rechercher" required value={this.props.valueResearch} onChange={this.handleChange}></input>
-                    <div class="checkbox">
-                        <label>
-                        <input type="checkbox" data-toggle="toggle"></input>
-                        Option is enabled
-                        </label>
+                    <div>
+                        <Button onClick={this.homePage} block bsSize="large" type="submit">
+                            Fil d'actualité
+                        </Button>
+                        <Button block bsSize="large" type="submit" onClick={this.information}>
+                            Mes informations
+                        </Button>
+                        <Button block bsSize="large" type="submit" onClick={this.post}>
+                            Poster
+                        </Button>
+                        <Button block bsSize="large" type="submit" onClick={this.notification}>
+                            Notifications
+                        </Button>
+                        <Button block bsSize="large" type="submit" onClick={this.myPosts}>
+                            Mes Posts
+                        </Button>
+                        <Button  block bsSize="large" type="submit" onClick={this.disconnect}>
+                            Se déconnecter
+                        </Button>
+                        <div id="adminButton">
+                        </div>
                     </div>
-                    <div class="checkbox disabled">
-                        <label>
-                        <input type="checkbox" disabled data-toggle="toggle"></input>
-                        Option is disabled
-                        </label>
-                    </div>
-                    <label for="Select1">tri des posts</label>
-                    <select class="form-control" id="selectLike"  onChange={this.handleSelect}>
-                        <option value = "0">Nombre de like</option>
-                        <option value = "5">+5 likes</option>
-                        <option value = "10">+10 likes</option>
-                        <option value = "20">+20 likes</option>
-                        <option value = "50">+50 likes</option>
-                        <option value = "100">+100 likes</option>
-                    </select>
-                    <select class="form-control" id="selectCategorie" onChange={this.handleSelect}>
-                        <option value = "">Selectionner une categorie</option>
-                        <option value="Personnel">Personnel</option>
-                        <option value="Livre">Livre</option>
-                        <option value="Film">Film</option>
-                        <option value="Humour">Humour</option>
-                        <option value="Citation">Citation</option>
-                        <option value="Reseaux">Réseaux</option>
-                        <option value="Autre">Autres</option>
-                    </select>
                     
-                    <Button  block bsSize="large" type="submit" onClick={this.disconnect}>
-                        Se déconnecter
-                    </Button>
-                    <Button block bsSize="large" type="submit" onClick={this.information}>
-                        Mes informations
-                    </Button>
-                    <Button block bsSize="large" type="submit" onClick={this.post}>
-                        Poster
-                    </Button>
-                    <Button block bsSize="large" type="submit" onClick={this.notification}>
-                        Notifications
-                    </Button>
-                    <Button block bsSize="large" type="submit" onClick={this.myPosts}>
-                        Mes Posts
-                    </Button>
-                    <div id="adminButton">
-                    </div>
                 </nav>
             </Col>
         </div>

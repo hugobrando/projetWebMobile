@@ -27,12 +27,15 @@ export class ShowPost extends React.Component {
         "create": ""
     },
     reponseAdd: "",
-    reponses: []
+    reponses: [],
+    selectLike: "0"
     };
     this.loadPost = this.loadPost.bind(this);
     this.owner = this.owner.bind(this);
     this.updatePostView = this.updatePostView.bind(this);
     this.updatePost = this.updatePost.bind(this)
+    this.filterPost = this.filterPost.bind(this);
+
     const {id} = this.props.match.params;
     
     this.loadPost(id);
@@ -40,27 +43,6 @@ export class ShowPost extends React.Component {
 
   };
 
-
-  disconnect = () => {
-    API.logout();
-    window.location = "/";
-  };
-
-  information = () => {
-    window.location = "/information";
-  };
-
-  post = () => {
-    window.location = "/createPost";
-  };
-
-  homePage = () => {
-    window.location = "/dashboard";
-  };
-
-  notification = () => {
-    window.location = "/notification";
-  };
 
   loadPost = async (id) => {
     const res = API.getPost(id).then( res => {
@@ -76,7 +58,8 @@ export class ShowPost extends React.Component {
   loadReponse = async (id) => {
     const res = API.getAllReponse(id).then( res => {
       this.setState({
-        reponses: res.data
+        reponses: res.data,
+        reponsesLoad: res.data
       })
     }
     )
@@ -318,13 +301,37 @@ export class ShowPost extends React.Component {
       }
     }
   };
+  
+  //recherche
+
+  filterPost = (e) => {
+    
+    // input de recherche
+    const event = e.target
+    this.setState({valueResearch: event.value});
+    
+    if(event.value){
+      var updatedReponses = this.state.reponsesLoad;
+      updatedReponses = updatedReponses.filter(function(item){
+        return (item.libelle.toLowerCase().search(event.value.toLowerCase()) !== -1);//dans le libelle
+      });
+      this.setState({reponses: updatedReponses});
+    }
+    else{
+      this.setState({reponses: this.state.reponsesLoad});
+    }
+  };
+
+  handleSelect = (e) => {
+    this.setState({[e.target.id]: e.target.value});
+  };
 
   render() {
-    const { post, reponseAdd, reponses } = this.state;
+    const { post, reponseAdd, reponses, valueResearch } = this.state;
     return (
       <Grid>
        <Row mt>
-        <Navbar/>
+        <Navbar valueResearch = {valueResearch} filter={this.filterPost} selectCategorie={this.handleSelect}/>
           <Col md={9}>
       <div className="Dashboard">
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
@@ -358,25 +365,30 @@ export class ShowPost extends React.Component {
         
       </div>
 
-      {reponses.map(element => 
-      <div class="list-group">
-        <a class="list-group-item list-group-item-action active">
-          <div class="d-flex w-100 justify-content-between">
-            <small>Posté par {element.userId.pseudo} le {element.create}</small>
-          </div>
-          <p class="mb-1">{element.libelle}</p>
-        </a>
-        <button type="button" class="btn btn-default btn-sm" onClick={() => this.likeReponse(element)}>
-            <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
-          </button>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislikeReponse(element)}>
-            <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
-          </button>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.signalerReponse(element)}>
-            <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
-          </button>
-      </div>
-      )}
+      {reponses.map(element => {if(this.state.selectLike <= element.like.length){
+                return(
+                  <div class="list-group">
+                  <a class="list-group-item list-group-item-action active">
+                    <div class="d-flex w-100 justify-content-between">
+                      <small>Posté par {element.userId.pseudo} le {element.create}</small>
+                    </div>
+                    <p class="mb-1">{element.libelle}</p>
+                  </a>
+                  <button type="button" class="btn btn-default btn-sm" onClick={() => this.likeReponse(element)}>
+                      <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislikeReponse(element)}>
+                      <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onClick={() => this.signalerReponse(element)}>
+                      <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
+                    </button>
+                </div>
+                )
+              }
+      
+             })
+            }
       
       <div id="comment"> 
       <FormGroup controlId="reponseAdd" bsSize="large">
@@ -392,9 +404,6 @@ export class ShowPost extends React.Component {
        
         <Button onClick={this.send} block bsSize="large" type="submit">
           Poster
-        </Button>
-        <Button onClick={this.homePage} block bsSize="large" type="submit">
-          Retour
         </Button>
         <div id="errorSubmit"></div>
         

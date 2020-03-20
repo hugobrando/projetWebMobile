@@ -45,18 +45,16 @@ class Navbar extends React.Component {
       }
 
       
-      isAdmin = async () => {
-        API.isAdmin().then(res => {
-            if (res === false) {
-                ReactDOM.render(
-                    React.createElement('div', {}, 
-                    <Button block bsSize="large" type="submit" onClick={this.adminPage}>
-                    Admin
-                    </Button>),
-                    document.getElementById("adminButton")
-                    );
-            }
-          })
+    isAdmin = async () => {
+        if(await API.isAdmin()){
+            ReactDOM.render(
+            React.createElement('div', {}, 
+            <Button block bsSize="large" type="submit" onClick={this.adminPage}>
+            Admin
+            </Button>),
+            document.getElementById("adminButton")
+            );
+        }
     };
 
     handleChange = (e) => {

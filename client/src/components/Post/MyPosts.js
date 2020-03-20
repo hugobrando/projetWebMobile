@@ -37,10 +37,6 @@ export class MyPosts extends React.Component {
     window.location = "/createPost";
   };
 
-  homePage = () => {
-    window.location = "/dashboard";
-  };
-
   loadAllMyPosts = async () => {
     const res = API.getAllMyPosts();
     this.setState({

@@ -41,7 +41,7 @@ export class CreatePost extends React.Component {
       try {
         const token = localStorage.getItem("token")
         const { data } = await API.createPost({ description, libelle, token, categorie });        
-        window.location = "/dashboard";
+        window.location = "/";
       } catch (error) {
         console.error(error);
         ReactDOM.render(
@@ -52,7 +52,7 @@ export class CreatePost extends React.Component {
     }
   };
   homePage = () => {
-    window.location = "/dashboard";
+    window.location = "/";
   }
   handleChange = (event) => {
     this.setState({

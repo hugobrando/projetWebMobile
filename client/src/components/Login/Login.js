@@ -32,7 +32,7 @@ export class Login extends React.Component {
       localStorage.setItem("nom", data.nom);
       localStorage.setItem("prenom", data.prenom);
       localStorage.setItem("_id", data._id);
-      window.location = "/dashboard";
+      window.location = "/";
     } catch (error) {
       console.error(error);
       ReactDOM.render(
@@ -49,13 +49,21 @@ export class Login extends React.Component {
       [event.target.id]: event.target.value
     });
   };
+  
+  homePage = () => {
+    window.location = "/";
+  };
+
   render() {
     if(API.isAuth()){
-      window.location = "/dashboard";
+      window.location = "/";
     }
     const { email, password } = this.state;
     return (
       <div className="Login">
+        <div>
+          <h1>Connectez vous !</h1>
+        </div>
         <FormGroup controlId="email" bsSize="large">
           <ControlLabel>Email</ControlLabel>
           <FormControl
@@ -80,6 +88,9 @@ export class Login extends React.Component {
         </Button>
         <Button onClick={this.signup} block bsSize="large" type="submit">
           S'inscrire
+        </Button>
+        <Button onClick={this.homePage} block bsSize="large" type="submit">
+          Retour
         </Button>
       </div>
     );

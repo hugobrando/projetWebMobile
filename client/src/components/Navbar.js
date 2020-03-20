@@ -35,7 +35,7 @@ class Navbar extends React.Component {
     };
 
     homePage = () => {
-    window.location = "/dashboard";
+    window.location = "/";
     };
     
     adminPage = async () => {
@@ -46,7 +46,7 @@ class Navbar extends React.Component {
 
       
     isAdmin = async () => {
-        if(await API.isAdmin()){
+        if((await API.isAdmin()).data.isAdmin){
             ReactDOM.render(
             React.createElement('div', {}, 
             <Button block bsSize="large" type="submit" onClick={this.adminPage}>

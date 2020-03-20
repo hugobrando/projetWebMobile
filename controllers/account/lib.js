@@ -168,10 +168,12 @@ async function info(req, res) {
 
 async function isAdmin(req, res) {
   const { token } = req.params;
-  if (!token) {
+  
+  if(!token || token == "tokenVide") {
     //Le cas où l'email ou bien le password ne serait pas soumit ou nul
-    return res.status(400).json({
-      text: "Requête invalide"
+    return res.status(200).json({
+      text: "Requête invalide",
+      isAdmin: false
     });
   }
   const user = jwt.decode(token, config.secret);

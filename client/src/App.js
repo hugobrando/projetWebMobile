@@ -20,10 +20,10 @@ class App extends Component {
       <div className="App">
         <div className="App-content">
           <Switch>
-            <Route exact path="/" component={Login} />
+            <Route exact path="/" component={Dashboard} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/post/:id" component={ShowPost} />
-            <PrivateRoute path="/dashboard" component={Dashboard} />
+            <Route path="/login" component={Login} />
             <PrivateRoute path="/information" component={Information} />
             <PrivateRoute path="/createPost" component={CreatePost} />
             <PrivateRoute path="/notification" component={Notification} />

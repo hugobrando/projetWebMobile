@@ -207,7 +207,12 @@ export default {
 
   isAdmin: function(){
     const token = localStorage.getItem("token");
-    return axios.get(`${burl}/user/isAdmin/` + token, { headers: headers });
+    if(token){
+      return axios.get(`${burl}/user/isAdmin/` + token, { headers: headers });
+    }
+    else{
+      return axios.get(`${burl}/user/isAdmin/` + "tokenVide", { headers: headers });
+    }
   },
 
   getAllPostSignaled: function() {

@@ -113,13 +113,35 @@ export class Dashboard extends React.Component {
                           <p class="mb-1">{element.libelle}</p>
                           <small>Categorie : {element.categorie}</small>
                         </a>
-                          <button type="button" class="btn btn-default btn-sm" onClick={() => this.like(element)}>
+                          <button type="button" class="btn btn-default btn-sm" onClick={() => {
+                                if(API.isAuth()){
+                                  this.like(element)
+                                }
+                                else{
+                                  window.location = "/login";
+                                }
+                              }
+                            }>
                             <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
                           </button>
-                          <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislike(element)}>
+                          <button type="button" class="btn btn-default btn-sm" onClick={() => {
+                                if(API.isAuth()){
+                                  this.dislike(element)
+                                }
+                                else{
+                                  window.location = "/login";
+                                }
+                              }}>
                             <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
                           </button>
-                          <button type="button" class="btn btn-default btn-sm" onClick={() => this.signaler(element)}>
+                          <button type="button" class="btn btn-default btn-sm" onClick={() => {
+                                if(API.isAuth()){
+                                  this.signaler(element)
+                                }
+                                else{
+                                  window.location = "/login";
+                                }
+                              }}>
                             <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
                           </button>
                       </div>

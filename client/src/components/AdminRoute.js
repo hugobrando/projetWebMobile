@@ -2,26 +2,6 @@ import React from "react";
 import API from "../utils/API.js";
 import { Route, Redirect } from "react-router-dom";
 
-const AdminRoute2 = ({ component: Component, ...rest }) => (
-  /*<Route {...rest} render= {Admin} />*/
-
-  <Route
-    {...rest}
-    render={(props) => {
-      API.isAdmin().then(res => {
-        if (res === false) {
-          return <Redirect to="/" />;
-        } else {
-          return <Component {...props} />;
-        }
-      })
-      
-    }}
-  />
-);
-
-
-
 export class AdminRoute extends React.Component {
   state = {
     loading: true,
@@ -45,7 +25,7 @@ export class AdminRoute extends React.Component {
           {...rest}
           render={(props) => {
             if (this.state.isAdmin === false) {
-              return <Redirect to="/dashboard" />;
+              return <Redirect to="/" />;
             } else {
               return <Component {...props} />;
             }  

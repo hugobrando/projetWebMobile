@@ -43,7 +43,7 @@ export class Information extends React.Component {
       };
 
     dasboard = () => {
-        window.location = "/dashboard";
+        window.location = "/";
       };
 
     modify = async () => {
@@ -98,7 +98,7 @@ export class Information extends React.Component {
               localStorage.setItem("nom", data.nom);
               localStorage.setItem("prenom", data.prenom);
               localStorage.setItem("_id", data._id);
-              window.location = "/dashboard";
+              window.location = "/";
           } catch (error) {
               console.error(error);
               ReactDOM.render(

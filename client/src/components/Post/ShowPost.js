@@ -69,6 +69,19 @@ export class ShowPost extends React.Component {
     this.setState({
       [event.target.id]: event.target.value
     });
+    if(! API.isAuth()){
+      ReactDOM.render(
+        React.createElement('div', {}, 
+        <p className="error">Attention vous n'êtes pas connecté. Connectez vous pour pouvoir écrire une réponse. <br></br> (Copier Coller votre réponse pour ne pas la perdre !)</p>
+        ),
+        document.getElementById("reponseAddError")
+      );
+      ReactDOM.render(
+        React.createElement('div', {}, 
+        ),
+        document.getElementById("errorSubmit")
+      );
+    }
   };
 
   likePost = async (element) => {
@@ -138,33 +151,47 @@ export class ShowPost extends React.Component {
   };
 
   send = async () => {
-    const { post, reponseAdd } = this.state;
-    var valide = true;
-    if (!reponseAdd || reponseAdd.length === 0){
-      ReactDOM.render(
-        React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir une réponse !</p>),
-        document.getElementById("reponseAddError")
-      )
-      valide = false;
-    }
-    
-    if(valide){
-      try {
-        const token = localStorage.getItem("token")
-        const id = post._id;
-        const { data } = await API.createReponse(reponseAdd, token, id);        
-        //reload les reponseAdds    
-        this.setState({
-          reponseAdd: ""
-        })
-        this.loadReponse(id);       
-      } catch (error) {
-        console.error(error);
+    if(API.isAuth()){
+      const { post, reponseAdd } = this.state;
+      var valide = true;
+      if (!reponseAdd || reponseAdd.length === 0){
         ReactDOM.render(
-          React.createElement('div', {}, <p className="error"> {error.response.data.text} !</p>),
-          document.getElementById("errorSubmit")
+          React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir une réponse !</p>),
+          document.getElementById("reponseAddError")
         )
+        valide = false;
       }
+      
+      if(valide){
+        try {
+          const token = localStorage.getItem("token")
+          const id = post._id;
+          const { data } = await API.createReponse(reponseAdd, token, id);        
+          //reload les reponseAdds    
+          this.setState({
+            reponseAdd: ""
+          })
+          this.loadReponse(id);       
+        } catch (error) {
+          console.error(error);
+          ReactDOM.render(
+            React.createElement('div', {}, <p className="error"> {error.response.data.text} !</p>),
+            document.getElementById("errorSubmit")
+          )
+        }
+      }
+    }
+    else{
+      ReactDOM.render(
+        React.createElement('div', {}, ),
+        document.getElementById("reponseAddError")
+      );
+      ReactDOM.render(
+        React.createElement('div', {}, 
+        <p className="error">Attention vous n'êtes pas connecté. Connectez vous pour pouvoir écrire une réponse. <br></br> (Copier Coller votre réponse pour ne pas la perdre !)</p>
+        ),
+        document.getElementById("errorSubmit")
+      );
     }
   };
 
@@ -346,13 +373,34 @@ export class ShowPost extends React.Component {
           </div>
           <p class="mb-1">{post.libelle}</p>
           <small>Categorie : {post.categorie}</small>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.likePost(post)}>
+          <button type="button" class="btn btn-default btn-sm" onClick={() => {
+                                if(API.isAuth()){
+                                  this.likePost(post);
+                                }
+                                else{
+                                  window.location = "/login";
+                                }
+                              }}>
             <span class="glyphicon glyphicon-thumbs-up"></span> Like {post.like.length}
           </button>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislikePost(post)}>
+          <button type="button" class="btn btn-default btn-sm" onClick={() => {
+                                if(API.isAuth()){
+                                  this.dislikePost(post);
+                                }
+                                else{
+                                  window.location = "/login";
+                                }
+                              }}>
             <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {post.dislike.length}
           </button>
-          <button type="button" class="btn btn-default btn-sm" onClick={() => this.signalerPost(post)}>
+          <button type="button" class="btn btn-default btn-sm" onClick={() => {
+                                if(API.isAuth()){
+                                  this.signalerPost(post);
+                                }
+                                else{
+                                  window.location = "/login";
+                                }
+                              }}>
             <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {post.signalement.length}
           </button>
         </a>
@@ -374,13 +422,34 @@ export class ShowPost extends React.Component {
                     </div>
                     <p class="mb-1">{element.libelle}</p>
                   </a>
-                  <button type="button" class="btn btn-default btn-sm" onClick={() => this.likeReponse(element)}>
+                  <button type="button" class="btn btn-default btn-sm" onClick={() => {
+                                if(API.isAuth()){
+                                  this.likeReponse(element);
+                                }
+                                else{
+                                  window.location = "/login";
+                                }
+                              }}>
                       <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
                     </button>
-                    <button type="button" class="btn btn-default btn-sm" onClick={() => this.dislikeReponse(element)}>
+                    <button type="button" class="btn btn-default btn-sm" onClick={() => {
+                                if(API.isAuth()){
+                                  this.dislikeReponse(element);
+                                }
+                                else{
+                                  window.location = "/login";
+                                }
+                              }}>
                       <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
                     </button>
-                    <button type="button" class="btn btn-default btn-sm" onClick={() => this.signalerReponse(element)}>
+                    <button type="button" class="btn btn-default btn-sm" onClick={() => {
+                                if(API.isAuth()){
+                                  this.signalerReponse(element);
+                                }
+                                else{
+                                  window.location = "/login";
+                                }
+                              }}>
                       <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
                     </button>
                 </div>

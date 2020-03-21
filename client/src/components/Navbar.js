@@ -7,6 +7,12 @@ import API from "../utils/API";
 class Navbar extends React.Component {
     constructor(props) {
         super(props);
+        if(API.isAuth()){
+            this.state={connect: "Se déconnecter"}
+        }
+        else{
+            this.state={connect: "Se connecter"}
+        }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
@@ -15,8 +21,13 @@ class Navbar extends React.Component {
     };
 
     disconnect = () => {
-        API.logout();
-        window.location = "/";
+        if(this.state.connect == "Se déconnecter"){
+            API.logout();
+            window.location = "/";
+            this.setState({connect: "Se connecter"});
+        }else{
+            window.location = "/login";
+        }
       };
     
     information = () => {
@@ -69,6 +80,7 @@ class Navbar extends React.Component {
     
 
 render() {
+    const {connect} = this.state
 
     return (
         <div>
@@ -117,7 +129,7 @@ render() {
                             Mes Posts
                         </Button>
                         <Button  block bsSize="large" type="submit" onClick={this.disconnect}>
-                            Se déconnecter
+                            {connect}
                         </Button>
                         <div id="adminButton">
                         </div>

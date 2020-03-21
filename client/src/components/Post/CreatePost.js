@@ -2,7 +2,6 @@ import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel,  } from "react-bootstrap";
 import API from "../../utils/API";
 import ReactDOM from 'react-dom';
-import { FormSelect } from "materialize-css";
 
 
 export class CreatePost extends React.Component {

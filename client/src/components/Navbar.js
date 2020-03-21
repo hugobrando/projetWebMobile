@@ -108,7 +108,7 @@ render() {
                             <option value="Film">Film</option>
                             <option value="Humour">Humour</option>
                             <option value="Citation">Citation</option>
-                            <option value="Reseaux">Réseaux</option>
+                            <option value="Réseaux">Réseaux</option>
                             <option value="Autre">Autres</option>
                         </select>
                     </div>

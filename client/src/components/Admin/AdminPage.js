@@ -37,10 +37,6 @@ export class AdminPage extends React.Component {
     window.location = "/createPost";
   };
 
-  homePage = () => {
-    window.location = "/dashboard";
-  };
-
   loadAllPost = async () => {
     const res = API.getAllPostSignaled();
     this.setState({

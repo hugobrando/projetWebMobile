@@ -76,7 +76,7 @@ export class Signup extends React.Component {
         localStorage.setItem("nom", data.nom);
         localStorage.setItem("prenom", data.prenom);
         localStorage.setItem("_id", data._id);
-        window.location = "/dashboard";
+        window.location = "/";
       } catch (error) {
         console.error(error);
         ReactDOM.render(

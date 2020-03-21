@@ -33,10 +33,6 @@ export class Notification extends React.Component {
     window.location = "/notification";
   };
 
-  homePage = () => {
-    window.location = "/dashboard";
-  };
-
   post = () => {
     window.location = "/createPost";
   };

@@ -16,9 +16,15 @@ class Navbar extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
+        this.cacheResearch = this.cacheResearch.bind(this);
         this.isAdmin = this.isAdmin.bind(this);
         this.isAdmin();
     };
+
+    componentDidMount(){
+        this.cacheResearch();
+        this.cacheCategorie();
+    }
 
     disconnect = () => {
         if(this.state.connect == "Se déconnecter"){
@@ -77,6 +83,19 @@ class Navbar extends React.Component {
     handleSelect = (e) => {
         this.props.selectCategorie(e);
     };
+
+
+    cacheResearch = () => {
+        if(this.props.cacheResearch){
+            document.getElementById("research").remove();
+        }
+    };
+
+    cacheCategorie = () => {
+        if(this.props.cacheCategorie){
+            document.getElementById("selectCategorie").remove();
+        }
+    };
     
 
 render() {
@@ -86,7 +105,7 @@ render() {
         <div>
             <Col md={3}>
                 <nav id="navbar-custom" class="navbar fixed-left">
-                    <div>
+                    <div id="research">
                         <div class="navbar-header">
                             <a class="navbar-brand">Filtres</a>
                         </div>
@@ -112,7 +131,7 @@ render() {
                             <option value="Autre">Autres</option>
                         </select>
                     </div>
-                    <div>
+                    <div onLoad={() => this.cacheResearch}>
                         <Button onClick={this.homePage} block bsSize="large" type="submit">
                             Fil d'actualité
                         </Button>

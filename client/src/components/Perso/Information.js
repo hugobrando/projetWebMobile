@@ -1,6 +1,8 @@
 import React from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Button, FormGroup, FormControl, ControlLabel, Row, Col, Grid } from "react-bootstrap";
 import ReactDOM from 'react-dom';
+import Navbar from '../../components/Navbar';
+
 
 import API from "../../utils/API";
 
@@ -116,86 +118,89 @@ export class Information extends React.Component {
 
   render() {
     return (
-      <div className="Dashboard">
-        <h1>Mes Informations</h1>
-        <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
-        <Button onClick={this.dasboard} block bsSize="large" type="submit">
-          Go to Dashboard
-        </Button>
-
-        <div className="Login">
-            <FormGroup controlId="email" bsSize="large">
-            <ControlLabel>Email</ControlLabel>
-            <FormControl
-                autoFocus
-                type="email"
-                value={this.state.email}
-                onChange={this.handleChange}
-            />
-            </FormGroup>
-            <div id="emailError"></div>
-            <FormGroup controlId="pseudo" bsSize="large">
-            <ControlLabel>Pseudo</ControlLabel>
-            <FormControl
-                type="text"
-                value={this.state.pseudo}
-                onChange={this.handleChange}
-            />
-            </FormGroup>
-            <div id="pseudoError"></div>
-            <FormGroup controlId="firstname" bsSize="large">
-            <ControlLabel>Nom</ControlLabel>
-            <FormControl
-                type="text"
-                value={this.state.firstname}
-                onChange={this.handleChange}
-            />
-            <div id="firstnameError"></div>
-            </FormGroup>
-            <FormGroup controlId="lastname" bsSize="large">
-            <ControlLabel>Prénom</ControlLabel>
-            <FormControl
-                type="text"
-                value={this.state.lastname}
-                onChange={this.handleChange}
-            />
-            </FormGroup>
-            <div id="lastnameError"></div>
-            <FormGroup controlId="birthday" bsSize="large">
-            <ControlLabel>Date de naissance</ControlLabel>
-            <FormControl
-                type="date"
-                value={this.stringToDate(this.state.birthday)}
-                onChange={this.handleChange}
-            />
-            </FormGroup>
-            <div id="birthdayError"></div>
-            <FormGroup controlId="adress" bsSize="large">
-            <ControlLabel>Adresse complète</ControlLabel>
-            <FormControl
-                type="text"
-                value={this.state.adress}
-                onChange={this.handleChange}
-            />
-            </FormGroup>
-            <div id="adressError"></div>
-            <FormGroup controlId="tel" bsSize="large">
-            <ControlLabel>Téléphone</ControlLabel>
-            <FormControl
-                type="text"
-                value={this.state.tel}
-                onChange={this.handleChange}
-            />
-            </FormGroup>
-            <div id="telError"></div>
-            <div id="errorSubmit">
+      <Grid>
+        <Row mt>
+        <Navbar cacheResearch = {true}/>
+          <Col md={9}>
+            <div className="Dashboard">
+              <h1>Mes Informations</h1>
+              <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
+              <div className="Login">
+                  <FormGroup controlId="email" bsSize="large">
+                  <ControlLabel>Email</ControlLabel>
+                  <FormControl
+                      autoFocus
+                      type="email"
+                      value={this.state.email}
+                      onChange={this.handleChange}
+                  />
+                  </FormGroup>
+                  <div id="emailError"></div>
+                  <FormGroup controlId="pseudo" bsSize="large">
+                  <ControlLabel>Pseudo</ControlLabel>
+                  <FormControl
+                      type="text"
+                      value={this.state.pseudo}
+                      onChange={this.handleChange}
+                  />
+                  </FormGroup>
+                  <div id="pseudoError"></div>
+                  <FormGroup controlId="firstname" bsSize="large">
+                  <ControlLabel>Nom</ControlLabel>
+                  <FormControl
+                      type="text"
+                      value={this.state.firstname}
+                      onChange={this.handleChange}
+                  />
+                  <div id="firstnameError"></div>
+                  </FormGroup>
+                  <FormGroup controlId="lastname" bsSize="large">
+                  <ControlLabel>Prénom</ControlLabel>
+                  <FormControl
+                      type="text"
+                      value={this.state.lastname}
+                      onChange={this.handleChange}
+                  />
+                  </FormGroup>
+                  <div id="lastnameError"></div>
+                  <FormGroup controlId="birthday" bsSize="large">
+                  <ControlLabel>Date de naissance</ControlLabel>
+                  <FormControl
+                      type="date"
+                      value={this.stringToDate(this.state.birthday)}
+                      onChange={this.handleChange}
+                  />
+                  </FormGroup>
+                  <div id="birthdayError"></div>
+                  <FormGroup controlId="adress" bsSize="large">
+                  <ControlLabel>Adresse complète</ControlLabel>
+                  <FormControl
+                      type="text"
+                      value={this.state.adress}
+                      onChange={this.handleChange}
+                  />
+                  </FormGroup>
+                  <div id="adressError"></div>
+                  <FormGroup controlId="tel" bsSize="large">
+                  <ControlLabel>Téléphone</ControlLabel>
+                  <FormControl
+                      type="text"
+                      value={this.state.tel}
+                      onChange={this.handleChange}
+                  />
+                  </FormGroup>
+                  <div id="telError"></div>
+                  <div id="errorSubmit">
+                  </div>
+                  <Button onClick={this.modify} block bsSize="large" type="submit">
+                  Modifier !
+                  </Button>
+                  
+              </div>
             </div>
-            <Button onClick={this.modify} block bsSize="large" type="submit">
-            Modifier !
-            </Button>
-            
-        </div>
-      </div>
+          </Col>
+      </Row>
+    </Grid> 
     );
   }
 }

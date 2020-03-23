@@ -1,17 +1,18 @@
 import React from "react";
 import { Component } from 'react';
-import { Button, Col, Grid } from "react-bootstrap";
+import { Image,Button, Col, Grid } from "react-bootstrap";
 import ReactDOM from 'react-dom';
 import API from "../utils/API";
+import icon from '../IconPCS.png';
 
 class Navbar extends React.Component {
     constructor(props) {
         super(props);
         if(API.isAuth()){
-            this.state={connect: "Se déconnecter"}
+            this.state={connect: "Se déconnecter", allNotification: [], notifNonVu : "0"}
         }
         else{
-            this.state={connect: "Se connecter"}
+            this.state={connect: "Se connecter", allNotification: [], notifNonVu : "0"}
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -19,7 +20,18 @@ class Navbar extends React.Component {
         this.cacheResearch = this.cacheResearch.bind(this);
         this.isAdmin = this.isAdmin.bind(this);
         this.isAdmin();
+
+        this.loadAllNotification = this.loadAllNotification.bind(this);
+        this.loadAllNotification();
     };
+
+     loadAllNotification = async () => {
+    const res = API.getAllNotification();
+    this.setState({
+        allNotification: (await res).data,
+        allNotificationLoad: (await res).data
+    });
+  };
 
     componentDidMount(){
         this.cacheResearch();
@@ -99,19 +111,21 @@ class Navbar extends React.Component {
     
 
 render() {
-    const {connect} = this.state
-
+    const { allNotification, connect, notifNonVu} = this.state
+    var notifNV = 0
     return (
         <div>
             <Col md={3}>
-                <nav id="navbar-custom" class="navbar fixed-left">
+                <Image src={icon} responsive/>
+                <nav id="navbar-custom" class="navbar fixed-left" >
                     <div id="research">
                         <div class="navbar-header">
                             <a class="navbar-brand">Filtres</a>
                         </div>
                         <input type="text" class="form-control" id="rechercheInput" placeholder="Rechercher" required value={this.props.valueResearch} onChange={this.handleChange}></input>
-                        
-                        <label for="Select1">tri des posts</label>
+                        <br/>
+                        <label for="Select1">Tri des posts</label>
+                        <br/>
                         <select class="form-control" id="selectLike"  onChange={this.handleSelect}>
                             <option value = "0">Tout nombre de like</option>
                             <option value = "5">+5 likes</option>
@@ -120,6 +134,7 @@ render() {
                             <option value = "50">+50 likes</option>
                             <option value = "100">+100 likes</option>
                         </select>
+                        <br/>
                         <select class="form-control" id="selectCategorie" onChange={this.handleSelect}>
                             <option value = "">Toutes Catégories</option>
                             <option value="Personnel">Personnel</option>
@@ -130,6 +145,7 @@ render() {
                             <option value="Réseaux">Réseaux</option>
                             <option value="Autre">Autres</option>
                         </select>
+                        <br/>
                     </div>
                     <div onLoad={() => this.cacheResearch}>
                         <Button onClick={this.homePage} block bsSize="large" type="submit">
@@ -142,7 +158,13 @@ render() {
                             Poster
                         </Button>
                         <Button block bsSize="large" type="submit" onClick={this.notification}>
-                            Notifications
+                        {allNotification.map(element => {
+                            if(element.vue == false){
+                                notifNV= notifNV + 1;
+                            }    
+                            })
+                            }
+                        Notifications : ({notifNV} en attente )
                         </Button>
                         <Button block bsSize="large" type="submit" onClick={this.myPosts}>
                             Mes Posts

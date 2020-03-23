@@ -101,6 +101,7 @@ export class Dashboard extends React.Component {
               <h1>Polytech Contre le Sexisme</h1>
               <h2>Bienvenue {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
             </div>
+            <br/>
             {allPost.map(element => {
               if((this.state.selectCategorie == element.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.like.length)){
                 return(

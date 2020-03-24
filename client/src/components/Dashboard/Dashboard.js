@@ -106,7 +106,7 @@ export class Dashboard extends React.Component {
               if((this.state.selectCategorie == element.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.like.length)){
                 return(
                       <div class="list-group">
-                        <a href={"post/" + element._id} class="list-group-item list-group-item-action active">
+                        <a href={"post/" + element._id} class="list-group-item list-group-item-action flex-column align-items-start active">
                           <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{element.description}</h5>
                             <small>Posté par {element.userId.pseudo} le {element.create}</small>

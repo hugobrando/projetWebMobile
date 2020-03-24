@@ -157,14 +157,16 @@ render() {
                         <Button block bsSize="large" type="submit" onClick={this.post}>
                             Poster
                         </Button>
-                        <Button block bsSize="large" type="submit" onClick={this.notification}>
+                        <Button block bsSize="large" type="submit" onClick={this.notification} >
                         {allNotification.map(element => {
                             if(element.vue == false){
                                 notifNV= notifNV + 1;
                             }    
                             })
                             }
-                        Notifications : ({notifNV} en attente )
+                            Notifications
+                        <span class="badge badge-primary badge-pill">{notifNV}</span>
+                        
                         </Button>
                         <Button block bsSize="large" type="submit" onClick={this.myPosts}>
                             Mes Posts

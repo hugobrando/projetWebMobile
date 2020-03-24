@@ -10,5 +10,6 @@ module.exports = function (app) {
     app.patch('/addDislike',reponse.addDislike)
     app.patch('/deleteDislike',reponse.deleteDislike)
     app.patch('/addSignalement',reponse.addSignalement)
-    app.patch('/deleteSignalement',reponse.deleteSignalement)
+    app.patch('/deleteSignalement',reponse.deleteSignalement);
+    app.get('/get/getAllReponseSignaled/:token',reponse.getAllReponseSignaled)
 }

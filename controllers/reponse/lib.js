@@ -336,6 +336,30 @@ async function create(req, res) {
     
   }
 
+  async function getAllReponseSignaled(req, res) {
+    const { token } = req.params;
+    const user = jwt.decode(token, config.secret);
+    if(user.isAdmin){
+      try {
+        var allReponse = await Reponse.find({ "signalement.0": { "$exists": true } }).sort({create: -1});
+        for(var i in allReponse){
+          var post = allReponse[i];
+          var u = await User.findOne({ _id: post.userId }).select('pseudo');
+          allReponse[i].userId = u;
+        };
+        return res.status(200).json(allReponse);
+      } catch (error) {
+          
+          return res.status(500).json({ text: "La requête a echoué" });
+      }
+    }
+    else{
+      return res.status(401).json({ text: "Vous n'êtes pas autorisé" });
+    }
+    
+    
+  }
+
 
   //On exporte nos fonctions
   
@@ -349,6 +373,8 @@ exports.deleteDislike = deleteDislike;
 exports.addSignalement = addSignalement;
 exports.deleteSignalement = deleteSignalement;
 exports.delete = deleteReponse;
+exports.getAllReponseSignaled = getAllReponseSignaled;
+
 
 
 //fonction interne

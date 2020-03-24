@@ -93,7 +93,7 @@ class Navbar extends React.Component {
     };
 
     handleSelect = (e) => {
-        this.props.selectCategorie(e);
+        this.props.select(e);
     };
 
 

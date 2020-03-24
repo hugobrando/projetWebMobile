@@ -228,5 +228,20 @@ export default {
         token: token },
       headers: headers 
     });
+  },
+
+  getAllReponseSignaled: function() {
+    const token = localStorage.getItem("token");
+    return axios.get(`${burl}/reponse/get/getAllReponseSignaled/`+token, { headers: headers });
+  },
+
+  deleteReponse: function(reponseId){
+    const token = localStorage.getItem("token");
+    return axios.delete(`${burl}/reponse/delete`, {
+      data : { 
+        reponseId: reponseId,
+        token: token },
+      headers: headers 
+    });
   }
 };

@@ -302,6 +302,41 @@ async function create(req, res) {
   }
 
 
+
+  
+  async function deleteReponse(req, res) {
+    const { reponseId, token } = req.body;
+    if (!reponseId || !token) {
+      //Le cas où ya pas de param
+      return res.status(400).json({
+        text: "Requête invalide"
+      });
+    }
+    const user = jwt.decode(token, config.secret);
+    if(user.isAdmin){
+      try {
+        // delete la reponse dans la liste des reponses de son post
+        await Post.find({ reponses: reponseId }, function(err, data){
+          const index = data[0].reponses.indexOf(reponseId);
+              if (index > -1) {
+                data[0].reponses.splice(index, 1);
+              }
+              data[0].save().then(() => console.log("suprimé de la liste des reponses du post"));
+        })
+        // delete finalement le post
+        await Reponse.deleteOne({ _id: reponseId });
+        return res.status(200).json({ text: "Reponse suprimmé" });
+      } catch (error) {
+          return res.status(500).json({ text: "La requête a echoué" });
+      }
+    }
+    else{
+      return res.status(401).json({ text: "Vous n'êtes pas autorisé" });
+    }
+    
+  }
+
+
   //On exporte nos fonctions
   
 exports.create = create;
@@ -313,6 +348,7 @@ exports.addDislike = addDislike;
 exports.deleteDislike = deleteDislike;
 exports.addSignalement = addSignalement;
 exports.deleteSignalement = deleteSignalement;
+exports.delete = deleteReponse;
 
 
 //fonction interne

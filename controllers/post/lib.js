@@ -376,7 +376,7 @@ async function create(req, res) {
               if (index > -1) {
                 user[0].notifications.splice(index, 1);
               }
-              user[0].save().then(() => console.log("surprimé de la liste des notif de l'user"));
+              user[0].save().then(() => console.log("suprimé de la liste des notif de l'user"));
             })
           }
         }).then(() => console.log("toutes les notifications suprimmés"));

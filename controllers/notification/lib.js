@@ -64,7 +64,6 @@ async function createAllNotifications(user){
     for(var i in user.notifications){
         var notif = user.notifications[i];
         var n = await Notification.findOne({ _id: notif });
-        console.log(n)
         var post = await Post.findOne({ _id: n.postId });
         n.postId = post;
         notifications.push(n);

@@ -78,7 +78,7 @@ export class Notification extends React.Component {
 
       <Grid>
         <Row mt>
-        <Navbar valueResearch = {valueResearch} filter={this.filterPost} selectCategorie={this.handleSelect}/>
+        <Navbar valueResearch = {valueResearch} filter={this.filterPost} select={this.handleSelect}/>
           <Col md={9}>
       <div className="Dashboard">
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>

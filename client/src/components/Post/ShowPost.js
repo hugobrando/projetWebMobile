@@ -358,7 +358,7 @@ export class ShowPost extends React.Component {
     return (
       <Grid>
        <Row mt>
-        <Navbar valueResearch = {valueResearch} cacheCategorie = {true} filter={this.filterPost} selectCategorie={this.handleSelect}/>
+        <Navbar valueResearch = {valueResearch} cacheCategorie = {true} filter={this.filterPost} select={this.handleSelect}/>
           <Col md={9}>
       <div className="Dashboard">
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>

@@ -2,3 +2,4 @@ config/*
 package-lock.json
 client/yarn.lock
 client/package-lock.json
+client/src/firebase-config.js

@@ -384,7 +384,7 @@ export class ShowPost extends React.Component {
         <a class="list-group-item list-group-item-action active">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">{post.description}</h5>
-            <small>Posté par {post.userId.pseudo} le {post.create}</small>
+            <small>Posté par {post.userId.pseudo} le {(post.create.split(':')[0] +"h"+ post.create.split(':')[1]).split("T")[0] + " à " + (post.create.split(':')[0] +"h"+ post.create.split(':')[1]).split("T")[1]}</small>
           </div>
           <p class="mb-1">{post.libelle}</p>
           <small>Categorie : {post.categorie}</small>
@@ -433,7 +433,7 @@ export class ShowPost extends React.Component {
                   <div class="list-group">
                   <a class="list-group-item list-group-item-action active">
                     <div class="d-flex w-100 justify-content-between">
-                      <small>Posté par {element.userId.pseudo} le {element.create}</small>
+                      <small>Posté par {element.userId.pseudo} le {(element.create.split(':')[0] +"h"+ element.create.split(':')[1]).split("T")[0] + " à " + (element.create.split(':')[0] +"h"+ element.create.split(':')[1]).split("T")[1]}</small>
                     </div>
                     <p class="mb-1">{element.libelle}</p>
                   </a>

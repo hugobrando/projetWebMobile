@@ -2,6 +2,7 @@ const Post = require("../../schema/post.js");
 const Reponse = require("../../schema/reponse.js");
 const Notification = require("../../schema/notification.js");
 const User = require("../../schema/user.js");
+const Categorie = require("../../schema/categorie.js");
 const jwt = require("jwt-simple");
 const config = require("../../config/config");
 
@@ -34,12 +35,20 @@ async function create(req, res) {
     };
     
     try {
-      // Sauvegarde de l'utilisateur en base
-      const postData = new Post(post);
-      await postData.save();
-      return res.status(200).json({
-        text: "Succès",
-      });
+
+      //verification que la categorie existe bien
+      const cat = await Categorie.findOne({nom: categorie});
+      if(cat){
+        // Sauvegarde du post en base
+        const postData = new Post(post);
+        await postData.save();
+        return res.status(200).json({
+          text: "Succès",
+        });
+      }
+      else{
+        return res.status(401).json({ text: "La catégorie n'existe pas" });
+      } 
     } catch (error) {
       return res.status(500).json({ error });
     }
@@ -56,32 +65,35 @@ async function create(req, res) {
    
     
     try {
-      const user= jwt.decode(token, config.secret);
-      const post = await Post.findOne({ _id: postId });
-      if(user._id == post.userId){ // seul le createur peut modifier sont post
-
-        
-        if (post){
-          post.description = description;
-          post.libelle = libelle;
-          post.categorie = categorie;
-  
-          await post.save();
-          return res.status(200).json({
-            text: "Succès",
-          });
+      //verification que la categorie existe bien
+      const cat = await Categorie.findOne({nom: categorie});
+      if(cat){
+        const user= jwt.decode(token, config.secret);
+        const post = await Post.findOne({ _id: postId });
+        if(user._id == post.userId){ // seul le createur peut modifier sont post
+          if (post){
+            post.description = description;
+            post.libelle = libelle;
+            post.categorie = categorie;
+    
+            await post.save();
+            return res.status(200).json({
+              text: "Succès",
+            });
+          }
+          else{
+            return res.status(400).json({
+              text: "La requête de modification a echoué"
+            });
+          }
         }
         else{
-          return res.status(400).json({
-            text: "La requête de modification a echoué"
-          });
+          return res.status(401).json({ text: "Vous n'êtes pas autorisé !" });
         }
       }
       else{
-        return res.status(401).json({ text: "Vous n'êtes pas autorisé !" });
+        return res.status(401).json({ text: "La catégorie n'existe pas" });
       }
-
-      
     } catch (error) {
       return res.status(500).json({ text: "La requête a echoué" });
     }

@@ -86,6 +86,7 @@ export class CreateCategorie extends React.Component {
                   type="text"
                   value={nom}
                   onChange={this.handleChange}
+                  placeholder="Ajouter une catégorie"
                 />
                 <div id="descriptionError"></div>
               </FormGroup>       

@@ -1,8 +1,10 @@
 import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel, Row, Col, Grid  } from "react-bootstrap";
 import API from "../../utils/API";
+import Storage from "../../utils/Storage";
 import ReactDOM from 'react-dom';
 import Navbar from '../../components/Navbar';
+
 
 
 export class CreatePost extends React.Component {
@@ -12,7 +14,8 @@ export class CreatePost extends React.Component {
       description: "",
       libelle: "",
       categorie: "",
-      allCategorie: []
+      allCategorie: [],
+      firebaseImage: null
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -26,9 +29,42 @@ export class CreatePost extends React.Component {
         allCategorie: (await res).data
     });
   };
+
+  uploadImage= async (e, method) => {
+    ReactDOM.render(
+      React.createElement('div', {}, <p className="text-success">L'image est en cours de traitement ...</p>),
+      document.getElementById("chargementImage")
+    )
+
+    let currentImageName = "firebase-image-"+ localStorage.getItem("_id")+ "-" + Date.now();
+
+    
+    let uploadImage = Storage.create(currentImageName,e);
+
+    uploadImage.on('state_changed',
+    (snapshot) => { },
+    (error) => {
+      alert(error);
+    },
+    () => {
+          
+          Storage.getUrlImage(currentImageName).then(url => {
+
+          this.setState({
+            firebaseImage: url
+          });
+          alert("L'image a était enregistré");
+          ReactDOM.render(
+            React.createElement('div', {}, ),
+            document.getElementById("chargementImage")
+          )
+      })
+    })
+    
+  }
   
   send = async () => {
-    const { description, libelle, categorie } = this.state;
+    const { description, libelle, categorie, firebaseImage } = this.state;
     var valide = true;
     if (!description || description.length === 0){
       ReactDOM.render(
@@ -56,7 +92,12 @@ export class CreatePost extends React.Component {
     if(valide){
       try {
         const token = localStorage.getItem("token")
-        const { data } = await API.createPost({ description, libelle, token, categorie });        
+        if(firebaseImage){
+          const { data } = await API.createPost({ description, libelle, token, categorie, imageUrl: firebaseImage });       
+        }
+        else{
+          const { data } = await API.createPost({ description, libelle, token, categorie });       
+        }
         window.location = "/";
       } catch (error) {
         console.error(error);
@@ -119,6 +160,13 @@ export class CreatePost extends React.Component {
                 </FormControl>
                         
                 <div id="categorieError"></div>
+              </FormGroup>
+
+              <FormGroup controlId="categorie" bsSize="large">
+                <ControlLabel>Image (Non obligatoire)</ControlLabel>
+                <input type="file" className="process__upload-btn" onChange={(e) => this.uploadImage(e, "firebase")} />
+                <img src={this.state.firebaseImage} alt="upload-image" className="process__image" />    
+                <div id="chargementImage"></div>
               </FormGroup>
             
               <Button onClick={this.send} block bsSize="large" type="submit">

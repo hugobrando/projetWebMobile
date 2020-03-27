@@ -53,7 +53,15 @@ export class ShowPost extends React.Component {
       this.setState({
         post: res.data
       });
-      
+
+      if(res.data.imageUrl){
+        ReactDOM.render(
+          React.createElement('div', {}, 
+          <img src={res.data.imageUrl} alt="upload-image" className="process__image img-responsive center-block" />    
+          ),
+          document.getElementById("image")
+        );
+      }
       this.owner();
     }
     )
@@ -387,6 +395,7 @@ export class ShowPost extends React.Component {
             <small>Posté par {post.userId.pseudo} le {(post.create.split(':')[0] +"h"+ post.create.split(':')[1]).split("T")[0] + " à " + (post.create.split(':')[0] +"h"+ post.create.split(':')[1]).split("T")[1]}</small>
           </div>
           <p class="mb-1">{post.libelle}</p>
+          <div id="image"></div>
           <small>Categorie : {post.categorie}</small>
           <button type="button" class="btn btn-default btn-sm" onClick={() => {
                                 if(API.isAuth()){

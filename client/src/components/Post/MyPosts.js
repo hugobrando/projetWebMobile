@@ -107,28 +107,56 @@ export class MyPosts extends React.Component {
             </div>
             {allPost.map(element => {
                     if((this.state.selectCategorie == element.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.like.length)){
-                      return(
-                        <div class="list-group">
-                          <a href={"post/" + element._id} class="list-group-item list-group-item-action active">
-                            <div class="d-flex w-100 justify-content-between">
-                              <h5 class="mb-1">{element.description}</h5>
-                              <small>Posté par {element.userId.pseudo} le {(element.create.split(':')[0] +"h"+ element.create.split(':')[1]).split("T")[0] + " à " + (element.create.split(':')[0] +"h"+ element.create.split(':')[1]).split("T")[1]}</small>
-                            </div>
-                            <p class="mb-1">{element.libelle}</p>
-                            <small>Categorie : {element.categorie}</small>
-                          </a>
-                            <button type="button" class="btn btn-default btn-sm">
-                              <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
-                            </button>
-                            <button type="button" class="btn btn-default btn-sm">
-                              <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
-                            </button>
-                            <button type="button" class="btn btn-default btn-sm">
-                              <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
-                            </button>
-                                
-                        </div>
-                      )
+                      if(!element.imageUrl){
+                        return(
+                          <div class="list-group">
+                            <a href={"post/" + element._id} class="list-group-item list-group-item-action active">
+                              <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{element.description}</h5>
+                                <small>Posté par {element.userId.pseudo} le {(element.create.split(':')[0] +"h"+ element.create.split(':')[1]).split("T")[0] + " à " + (element.create.split(':')[0] +"h"+ element.create.split(':')[1]).split("T")[1]}</small>
+                              </div>
+                              <p class="mb-1">{element.libelle}</p>
+                              <small>Categorie : {element.categorie}</small>
+                            </a>
+                              <button type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
+                              </button>
+                              <button type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
+                              </button>
+                              <button type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
+                              </button>
+                                  
+                          </div>
+                        )
+                      }
+                      else{
+                        return(
+                          <div class="list-group">
+                            <a href={"post/" + element._id} class="list-group-item list-group-item-action active">
+                              <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{element.description}</h5>
+                                <small>Posté par {element.userId.pseudo} le {(element.create.split(':')[0] +"h"+ element.create.split(':')[1]).split("T")[0] + " à " + (element.create.split(':')[0] +"h"+ element.create.split(':')[1]).split("T")[1]}</small>
+                              </div>
+                              <p class="mb-1">{element.libelle}</p>
+                              <img src={element.imageUrl} alt="upload-image" className="process__image img-responsive center-block" />    
+                              <small>Categorie : {element.categorie}</small>
+                            </a>
+                              <button type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-thumbs-up"></span> Like {element.like.length}
+                              </button>
+                              <button type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-thumbs-down"></span> Dislike {element.dislike.length}
+                              </button>
+                              <button type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
+                              </button>
+                                  
+                          </div>
+                        )
+                      }
+                      
                     }
                   }
                 )  

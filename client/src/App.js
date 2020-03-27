@@ -11,6 +11,7 @@ import { ShowPost } from "./components/Post/ShowPost.js"
 import { Notification } from "./components/Notification/Notification.js"
 import { MyPosts } from "./components/Post/MyPosts.js"
 import { AdminPage } from "./components/Admin/AdminPage.js"
+import { CreateCategorie } from "./components/Admin/CreateCategorie.js"
 
 import "./App.css";
 
@@ -29,6 +30,7 @@ class App extends Component {
             <PrivateRoute path="/notification" component={Notification} />
             <PrivateRoute path="/myPosts" component={MyPosts} />
             <AdminRoute path="/adminPage" component={AdminPage} />
+            <AdminRoute path="/createCategorie" component={CreateCategorie} />
           </Switch>
         </div>
       </div>

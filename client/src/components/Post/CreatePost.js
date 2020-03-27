@@ -6,11 +6,27 @@ import Navbar from '../../components/Navbar';
 
 
 export class CreatePost extends React.Component {
-  state = {
-    description: "",
-    libelle: "",
-    categorie: ""
+  constructor(props) {
+    super(props);
+    this.state = {
+      description: "",
+      libelle: "",
+      categorie: "",
+      allCategorie: []
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.loadAllCategorie = this.loadAllCategorie.bind(this);
+    this.loadAllCategorie();
   };
+
+  loadAllCategorie = async () => {
+    const res = API.getAllCategorie();
+    this.setState({
+        allCategorie: (await res).data
+    });
+  };
+  
   send = async () => {
     const { description, libelle, categorie } = this.state;
     var valide = true;
@@ -29,7 +45,7 @@ export class CreatePost extends React.Component {
       )
       valide = false;
     }
-    if (!categorie || categorie.length === 0){
+    if (!categorie || categorie == "..." || categorie.length === 0){
       ReactDOM.render(
         React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir votre categorie !</p>),
         document.getElementById("categorieError")
@@ -60,7 +76,7 @@ export class CreatePost extends React.Component {
     });
   };
   render() {
-    const { description, libelle, categorie } = this.state;
+    const { description, libelle, categorie, allCategorie } = this.state;
     return (
       <Grid>
         <Row mt>
@@ -95,13 +111,11 @@ export class CreatePost extends React.Component {
                 <FormControl componentClass="select" placeholder="select" value={categorie}
                         onChange={this.handleChange}>
                     <option value="...">Selectionner une categorie</option>
-                    <option value="Personnel">Personnel</option>
-                    <option value="Livre">Livre</option>
-                    <option value="Film">Film</option>
-                    <option value="Humour">Humour</option>
-                    <option value="Citation">Citation</option>
-                    <option value="Reseaux">Réseaux</option>
-                    <option value="Autre">Autres</option>
+                    {allCategorie.map(element => {
+                          return(<option value={element.nom}>{element.nom}</option>)
+                        }
+                      )
+                    }
                 </FormControl>
                         
                 <div id="categorieError"></div>

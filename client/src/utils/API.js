@@ -243,5 +243,14 @@ export default {
         token: token },
       headers: headers 
     });
+  },
+  
+  getAllCategorie: function() {
+    const token = localStorage.getItem("token");
+    return axios.get(`${burl}/categorie/get/allCategorie/`+token, { headers: headers });
+  },
+
+  createCategorie: function(send) {
+    return axios.post(`${burl}/categorie/create`, send, { headers: headers });
   }
 };

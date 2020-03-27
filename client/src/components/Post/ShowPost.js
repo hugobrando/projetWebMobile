@@ -28,18 +28,22 @@ export class ShowPost extends React.Component {
     },
     reponseAdd: "",
     reponses: [],
-    selectLike: "0"
+    selectLike: "0",
+    allCategorie: []
     };
     this.loadPost = this.loadPost.bind(this);
     this.owner = this.owner.bind(this);
     this.updatePostView = this.updatePostView.bind(this);
     this.updatePost = this.updatePost.bind(this)
     this.filterPost = this.filterPost.bind(this);
+    this.loadAllCategorie = this.loadAllCategorie.bind(this);
+
 
     const {id} = this.props.match.params;
     
     this.loadPost(id);
     this.loadReponse(id);
+    this.loadAllCategorie();
 
   };
 
@@ -196,7 +200,6 @@ export class ShowPost extends React.Component {
   };
 
   owner = async () => {
-    
     if(this.state.post.userId._id == localStorage.getItem("_id")){
       ReactDOM.render(
         React.createElement('div', {}, 
@@ -208,8 +211,15 @@ export class ShowPost extends React.Component {
     };
   };
 
+  loadAllCategorie = async () => {
+    const res = API.getAllCategorie();
+    this.setState({
+        allCategorie: (await res).data
+    });
+  };
+
   updatePostView = async () => {
-    const { post } = this.state;
+    const { post, allCategorie } = this.state;
     ReactDOM.render(
       React.createElement('div', {}, 
       <div className="Titre">
@@ -239,13 +249,11 @@ export class ShowPost extends React.Component {
         <FormControl componentClass="select" placeholder="select" value={post.categorie}
                 onChange={this.handleChangePost}>
             <option value="...">Selectionner une categorie</option>
-            <option value="Personnel">Personnel</option>
-            <option value="Livre">Livre</option>
-            <option value="Film">Film</option>
-            <option value="Humour">Humour</option>
-            <option value="Citation">Citation</option>
-            <option value="Réseaux">Réseaux</option>
-            <option value="Autre">Autre</option>
+            {allCategorie.map(element => {
+                          return(<option value={element.nom}>{element.nom}</option>)
+                        }
+                      )
+            }
         </FormControl>
                 
         <div id="categorieError"></div>
@@ -292,7 +300,7 @@ export class ShowPost extends React.Component {
       )
       valide = false;
     }
-    if (!post.categorie || post.categorie.length === 0){
+    if (!post.categorie || post.categorie == "..." || post.categorie.length === 0){
       ReactDOM.render(
         React.createElement('div', {}, <p className="error">Vous avez oubliez de saisir votre categorie !</p>),
         document.getElementById("categorieError")
@@ -310,7 +318,14 @@ export class ShowPost extends React.Component {
         const { data } = await API.updatePost({ postId, description, libelle, categorie, token }); 
         if(data.text == "Succès"){
           ReactDOM.render(
-            React.createElement('div', {}, <p className="bg-success"> Le post a bien était modifier !</p>),
+            React.createElement('div', {}, 
+            <div>
+              <p className="bg-success"> Le post a bien était modifier !</p>
+              <button type="button" class="btn btn-default btn-sm btn-info" onClick={() => this.updatePostView()}>
+              <span class="glyphicon glyphicon-exclamation-sign"></span> Modifier !
+              </button>
+            </div>
+            ),
             document.getElementById("owner")
           )
         }else{

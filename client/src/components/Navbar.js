@@ -25,13 +25,13 @@ class Navbar extends React.Component {
         this.loadAllNotification();
     };
 
-     loadAllNotification = async () => {
-    const res = API.getAllNotification();
-    this.setState({
-        allNotification: (await res).data,
-        allNotificationLoad: (await res).data
-    });
-  };
+    loadAllNotification = async () => {
+        const res = API.getAllNotification();
+        this.setState({
+            allNotification: (await res).data,
+            allNotificationLoad: (await res).data
+        });
+    };
 
     componentDidMount(){
         this.cacheResearch();
@@ -71,16 +71,28 @@ class Navbar extends React.Component {
         if(await API.isAdmin()){
           window.location = "/adminPage";
         };
-      }
+    }
+
+    ajoutCategorie = async () => {
+        if(await API.isAdmin()){
+          window.location = "/createCategorie";
+        };
+    }
 
       
     isAdmin = async () => {
         if((await API.isAdmin()).data.isAdmin){
             ReactDOM.render(
             React.createElement('div', {}, 
-            <Button block bsSize="large" type="submit" onClick={this.adminPage}>
-            Admin
-            </Button>),
+            <React.Fragment>
+                <Button block bsSize="large" type="submit" className="active" onClick={this.adminPage}>
+                Admin
+                </Button>
+                <Button block bsSize="large" type="submit" className="active" onClick={this.ajoutCategorie}>
+                Ajouter catégorie
+                </Button>
+            </React.Fragment>
+            ),
             document.getElementById("adminButton")
             );
         }

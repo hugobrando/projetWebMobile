@@ -9,10 +9,16 @@ class Navbar extends React.Component {
     constructor(props) {
         super(props);
         if(API.isAuth()){
-            this.state={connect: "Se déconnecter", allNotification: [], notifNonVu : "0"}
+            this.state={connect: "Se déconnecter",
+            allNotification: [],
+            allCategorie: []
+            }
         }
         else{
-            this.state={connect: "Se connecter", allNotification: [], notifNonVu : "0"}
+            this.state={connect: "Se connecter", 
+            allNotification: [], 
+            allCategorie: []
+            }
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -20,10 +26,18 @@ class Navbar extends React.Component {
         this.cacheResearch = this.cacheResearch.bind(this);
         this.isAdmin = this.isAdmin.bind(this);
         this.isAdmin();
-
+        this.loadAllCategorie = this.loadAllCategorie.bind(this);
+        this.loadAllCategorie();
         this.loadAllNotification = this.loadAllNotification.bind(this);
         this.loadAllNotification();
     };
+
+    loadAllCategorie = async () => {
+        const res = API.getAllCategorie();
+        this.setState({
+            allCategorie: (await res).data
+        });
+      };
 
     loadAllNotification = async () => {
         const res = API.getAllNotification();
@@ -123,7 +137,7 @@ class Navbar extends React.Component {
     
 
 render() {
-    const { allNotification, connect, notifNonVu} = this.state
+    const { allNotification, connect,  allCategorie} = this.state
     var notifNV = 0
     return (
         <div>
@@ -149,13 +163,11 @@ render() {
                         <br/>
                         <select class="form-control" id="selectCategorie" onChange={this.handleSelect}>
                             <option value = "">Toutes Catégories</option>
-                            <option value="Personnel">Personnel</option>
-                            <option value="Livre">Livre</option>
-                            <option value="Film">Film</option>
-                            <option value="Humour">Humour</option>
-                            <option value="Citation">Citation</option>
-                            <option value="Réseaux">Réseaux</option>
-                            <option value="Autre">Autres</option>
+                            {allCategorie.map(element => {
+                                return(<option value={element.nom}>{element.nom}</option>)
+                                    }
+                                )
+                            }
                         </select>
                         <br/>
                     </div>

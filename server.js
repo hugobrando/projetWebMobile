@@ -40,19 +40,28 @@ app.use(function(req, res, next) {
   next();
 });
 
-//Définition du routeur
+//Définition des routeurs
+//user
 const routerUser = express.Router();
 app.use("/user", routerUser);
 require(__dirname + "/controllers/userController")(routerUser);
+//post
 const routerPost = express.Router();
 app.use("/post", routerPost);
 require(__dirname + "/controllers/postController")(routerPost);
+//reponse
 const routerReponse = express.Router();
 app.use("/reponse", routerReponse);
 require(__dirname + "/controllers/reponseController")(routerReponse);
+//notification
 const routerNotification = express.Router();
 app.use("/notification", routerNotification);
 require(__dirname + "/controllers/notificationController")(routerNotification);
+//categorie
+const routerCategorie = express.Router();
+app.use("/categorie", routerCategorie);
+require(__dirname + "/controllers/categorieController")(routerCategorie);
+
 
 //Définition et mise en place du port d'écoute
 const port = process.env.PORT || 9000;

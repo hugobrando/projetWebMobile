@@ -7,5 +7,9 @@ export default {
   
   getUrlImage: function(currentImageName){
     return storage.ref('images').child(currentImageName).getDownloadURL()
-  }
+  },
+
+  deleteImage: function(URL){
+    return storage.refFromURL(URL).delete(); 
+  },
 }

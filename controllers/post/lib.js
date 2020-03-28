@@ -9,7 +9,7 @@ const config = require("../../config/config");
 
 
 async function create(req, res) {
-    const { description, libelle, token, categorie} = req.body;
+    const { description, libelle, token, categorie, imageUrl} = req.body;
     if (!description || !libelle || !token || !categorie) {
       //Verif des infos qui arivent
       return res.status(400).json({
@@ -22,17 +22,34 @@ async function create(req, res) {
     const signalement = [];
     const reponses = [];
     const userId = jwt.decode(token, config.secret);
-
-    const post = {
-      description,
-      libelle,
-      like,
-      dislike,
-      signalement,
-      userId,
-      categorie,
-      reponses
-    };
+    
+    var post = {};
+    if(imageUrl){
+      post = {
+        description,
+        libelle,
+        like,
+        dislike,
+        signalement,
+        userId,
+        categorie,
+        reponses,
+        imageUrl
+      };
+    }
+    else{
+      post = {
+        description,
+        libelle,
+        like,
+        dislike,
+        signalement,
+        userId,
+        categorie,
+        reponses
+      };
+    }
+    
     
     try {
 
@@ -55,7 +72,7 @@ async function create(req, res) {
   }
 
   async function update(req, res) {
-    const { postId, description, libelle, categorie, token } = req.body;
+    const { postId, description, libelle, categorie, token, imageUrl } = req.body;
     if (!postId ||!description || !libelle || !categorie || !token) {
       //Le cas où les infos sont vide
       return res.status(400).json({
@@ -75,7 +92,9 @@ async function create(req, res) {
             post.description = description;
             post.libelle = libelle;
             post.categorie = categorie;
-    
+            if(imageUrl){
+              post.imageUrl = imageUrl;
+            }
             await post.save();
             return res.status(200).json({
               text: "Succès",

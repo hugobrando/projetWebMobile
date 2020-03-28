@@ -40,6 +40,10 @@ const schema = mongoose.Schema({
         required: true,
         ref: 'Reponse'
       },
+    imageUrl: {
+      type: String,
+      required: false
+    },
     create: { 
         type: Date,
         default: Date.now

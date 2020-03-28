@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, FormGroup, FormControl, ControlLabel, Grid, Row, Col } from "react-bootstrap";
+import Storage from "../../utils/Storage";
 import ReactDOM from 'react-dom';
-
 import API from "../../utils/API";
 import Navbar from '../../components/Navbar';
 
@@ -24,12 +24,14 @@ export class ShowPost extends React.Component {
             "pseudo": ""
         },
         "categorie": "",
+        "imageUrl": "",
         "create": ""
     },
     reponseAdd: "",
     reponses: [],
     selectLike: "0",
-    allCategorie: []
+    allCategorie: [],
+    wait: false
     };
     this.loadPost = this.loadPost.bind(this);
     this.owner = this.owner.bind(this);
@@ -37,6 +39,8 @@ export class ShowPost extends React.Component {
     this.updatePost = this.updatePost.bind(this)
     this.filterPost = this.filterPost.bind(this);
     this.loadAllCategorie = this.loadAllCategorie.bind(this);
+    this.uploadImage = this.uploadImage.bind(this);
+
 
 
     const {id} = this.props.match.params;
@@ -57,7 +61,7 @@ export class ShowPost extends React.Component {
       if(res.data.imageUrl){
         ReactDOM.render(
           React.createElement('div', {}, 
-          <img src={res.data.imageUrl} alt="upload-image" className="process__image img-responsive center-block" />    
+          <img src={this.state.post.imageUrl} alt="upload-image" className="process__image img-responsive center-block" />    
           ),
           document.getElementById("image")
         );
@@ -216,7 +220,22 @@ export class ShowPost extends React.Component {
         </button>),
         document.getElementById("owner")
       );
-    };
+    }
+  };
+
+  cancel = async () => {
+    if(this.state.oldUrl && this.state.oldUrl != ""){
+      //on suprimé la l'image enregistré en Stockage mais qui a été annulé par l'utilisateur
+      Storage.deleteImage(this.state.post.imageUrl);
+      this.setState({
+        oldUrl: "",
+        post: {
+              ...this.state.post,
+              imageUrl: this.state.oldUrl
+        }
+      })
+    }
+    this.owner();
   };
 
   loadAllCategorie = async () => {
@@ -266,18 +285,68 @@ export class ShowPost extends React.Component {
                 
         <div id="categorieError"></div>
       </FormGroup>
+      <FormGroup controlId="image" bsSize="large">
+                <ControlLabel>Image (Non obligatoire)</ControlLabel>
+                <input type="file" className="process__upload-btn" onChange={(e) => this.uploadImage(e)} />
+                <img src={post.imageUrl} alt="upload-image" className="process__image  img-responsive center-block" />    
+                <div id="chargementImage"></div>
+      </FormGroup>
      
       <Button onClick={this.updatePost} block bsSize="large" type="submit">
         Poster
       </Button>
       <div id="errorSubmit"></div>
-      <Button onClick={this.owner} block bsSize="large" type="submit">
+      <Button onClick={this.cancel} block bsSize="large" type="submit">
         Annuler
       </Button>
     </div>),
       document.getElementById("owner")
     );
   };
+
+  uploadImage= async (e) => {
+    // mise en chargement => on ne pourra pas poster tant que la photo n'a pas été chargé
+    ReactDOM.render(
+      React.createElement('div', {}, <p className="text-success">L'image est en cours de traitement ...</p>),
+      document.getElementById("chargementImage")
+    )
+    this.setState({wait: true});
+
+    let currentImageName = "firebase-image-"+ localStorage.getItem("_id")+ "-" + Date.now();
+
+    
+    let uploadImage = Storage.create(currentImageName,e);
+
+    uploadImage.on('state_changed',
+    (snapshot) => { },
+    (error) => {
+      alert(error);
+    },
+    () => {
+          
+          Storage.getUrlImage(currentImageName).then(url => {
+            this.setState({
+              oldUrl: this.state.post.imageUrl,
+              post: {
+                    ...this.state.post,
+                    imageUrl: url
+              },
+              wait: false
+            })
+            this.updatePostView();
+          alert("L'image a était enregistré");
+          ReactDOM.render(
+            React.createElement('div', {}, ),
+            document.getElementById("errorSubmit")
+          )
+          ReactDOM.render(
+            React.createElement('div', {}, ),
+            document.getElementById("chargementImage")
+          )
+      })
+    })
+    
+  }
 
   handleChangePost = async (event) => {
     await  this.setState({
@@ -291,7 +360,7 @@ export class ShowPost extends React.Component {
 
 
   updatePost = async () => {
-    const { post } = this.state;
+    const { post, wait } = this.state;
     var valide = true;
     if (!post.description || post.description.length === 0){
       ReactDOM.render(
@@ -316,36 +385,72 @@ export class ShowPost extends React.Component {
       valide = false;
     }
     
-    if(valide){
+    if(valide && !wait){
       try {
         const token = localStorage.getItem("token")
         const postId = post._id;
         const description = post.description;
         const libelle = post.libelle;
         const categorie = post.categorie;
-        const { data } = await API.updatePost({ postId, description, libelle, categorie, token }); 
-        if(data.text == "Succès"){
-          ReactDOM.render(
-            React.createElement('div', {}, 
-            <div>
-              <p className="bg-success"> Le post a bien était modifier !</p>
-              <button type="button" class="btn btn-default btn-sm btn-info" onClick={() => this.updatePostView()}>
-              <span class="glyphicon glyphicon-exclamation-sign"></span> Modifier !
-              </button>
-            </div>
-            ),
-            document.getElementById("owner")
-          )
-        }else{
-          ReactDOM.render(
-            React.createElement('div', {}, <p className="error"> Erreur de modification !</p>),
-            document.getElementById("errorSubmit")
-          )
+        if(post.imageUrl){
+          const { data } = await API.updatePost({ postId, description, libelle, categorie, token, imageUrl: post.imageUrl }); 
+          if(data.text == "Succès"){
+            const {id} = this.props.match.params;
+            this.loadPost(id);
+            if(this.state.oldUrl == this.state.post.imageUrl){
+              alert("Le post a bien était modifier !");
+            }
+            else{
+              // on supprime l'ancienne photo du stockage
+              Storage.deleteImage(this.state.oldUrl);
+              this.setState({
+                oldUrl: ""
+              });
+              
+              
+              alert("Le post a bien était modifier ! L'ancienne image a été suppimé.");
+            }
+          }else{
+            ReactDOM.render(
+              React.createElement('div', {}, <p className="error"> Erreur de modification !</p>),
+              document.getElementById("errorSubmit")
+            )
+          }
         }
+        else{
+          const { data } = await API.updatePost({ postId, description, libelle, categorie, token }); 
+          if(data.text == "Succès"){
+            ReactDOM.render(
+              React.createElement('div', {}, 
+              <div>
+                <p className="bg-success"> Le post a bien était modifier !</p>
+                <button type="button" class="btn btn-default btn-sm btn-info" onClick={() => this.updatePostView()}>
+                <span class="glyphicon glyphicon-exclamation-sign"></span> Modifier !
+                </button>
+              </div>
+              ),
+              document.getElementById("owner")
+            )
+          }else{
+            ReactDOM.render(
+              React.createElement('div', {}, <p className="error"> Erreur de modification !</p>),
+              document.getElementById("errorSubmit")
+            )
+          }
+        }
+        
       } catch (error) {
         console.error(error);
         ReactDOM.render(
-          React.createElement('div', {}, <p className="error"> {error.response.data.text} !</p>),
+          React.createElement('div', {}, <p className="error"> {error.message} !</p>),
+          document.getElementById("errorSubmit")
+        )
+      }
+    }
+    else{
+      if(wait){
+        ReactDOM.render(
+          React.createElement('div', {}, <p className="error"> La photo n'a pas fini de charger !</p>),
           document.getElementById("errorSubmit")
         )
       }

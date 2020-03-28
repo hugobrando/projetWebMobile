@@ -20,6 +20,7 @@ export class CreatePost extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.loadAllCategorie = this.loadAllCategorie.bind(this);
+    this.uploadImage = this.uploadImage.bind(this);
     this.loadAllCategorie();
   };
 
@@ -30,7 +31,7 @@ export class CreatePost extends React.Component {
     });
   };
 
-  uploadImage= async (e, method) => {
+  uploadImage= async (e) => {
     ReactDOM.render(
       React.createElement('div', {}, <p className="text-success">L'image est en cours de traitement ...</p>),
       document.getElementById("chargementImage")
@@ -109,6 +110,9 @@ export class CreatePost extends React.Component {
     }
   };
   homePage = () => {
+    if(this.state.firebaseImage){
+      Storage.deleteImage(this.state.firebaseImage);
+    }
     window.location = "/";
   }
   handleChange = (event) => {
@@ -162,10 +166,10 @@ export class CreatePost extends React.Component {
                 <div id="categorieError"></div>
               </FormGroup>
 
-              <FormGroup controlId="categorie" bsSize="large">
+              <FormGroup controlId="image" bsSize="large">
                 <ControlLabel>Image (Non obligatoire)</ControlLabel>
-                <input type="file" className="process__upload-btn" onChange={(e) => this.uploadImage(e, "firebase")} />
-                <img src={this.state.firebaseImage} alt="upload-image" className="process__image" />    
+                <input type="file" className="process__upload-btn" onChange={(e) => this.uploadImage(e)} />
+                <img src={this.state.firebaseImage} alt="upload-image" className="process__image img-responsive center-block" />    
                 <div id="chargementImage"></div>
               </FormGroup>
             

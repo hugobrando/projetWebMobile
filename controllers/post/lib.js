@@ -58,9 +58,10 @@ async function create(req, res) {
       if(cat){
         // Sauvegarde du post en base
         const postData = new Post(post);
-        await postData.save();
+        const postObject = await postData.save();
         return res.status(200).json({
           text: "Succès",
+          id: postObject._id
         });
       }
       else{

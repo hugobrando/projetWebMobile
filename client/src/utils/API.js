@@ -230,6 +230,15 @@ export default {
     });
   },
 
+  deleteImage: function(postId){
+    const token = localStorage.getItem("token");
+    return axios.patch(`${burl}/post/deletePhoto`,{
+      postId,
+      token
+    }
+    , { headers: headers });
+  },
+
   getAllReponseSignaled: function() {
     const token = localStorage.getItem("token");
     return axios.get(`${burl}/reponse/get/getAllReponseSignaled/`+token, { headers: headers });

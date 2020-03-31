@@ -15,4 +15,5 @@ module.exports = function (app) {
     app.patch('/deleteSignalement',post.deleteSignalement);
     app.get('/get/getAllPostSignaled/:token',post.getAllPostSignaled);
     app.get('/get/getAllMyPosts/:token',post.getAllMyPosts);
+    app.patch('/deletePhoto',post.deletePhoto);
 }

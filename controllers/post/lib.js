@@ -448,6 +448,32 @@ async function create(req, res) {
     
   }
 
+  async function deletePhoto(req, res) {
+    const { postId, token } = req.body;
+    if (!postId || !token) {
+      //Le cas où les infos sont vide
+      return res.status(400).json({
+        text: "Requête invalide"
+      });
+    }
+    try{
+      const user = jwt.decode(token, config.secret);
+      if(user.isAdmin){
+        var post = await Post.findOne({ _id: postId});
+        post.imageUrl = undefined;
+        await post.save();
+        return res.status(200).json({ text: "Photo suprimmé" });
+      }
+      else{
+        return res.status(401).json({ text: "Vous n'êtes pas autorisé" });
+      }
+    }catch (error) {
+      console.log(error)
+        return res.status(500).json({ text: "La requête a echoué" });
+    }
+    
+  }
+
   //On exporte nos fonctions
   
 exports.create = create;
@@ -464,6 +490,7 @@ exports.getAllPost = getAllPost;
 exports.getAllPostSignaled = getAllPostSignaled;
 exports.delete = deletePost;
 exports.getAllMyPosts = getAllMyPosts;
+exports.deletePhoto = deletePhoto;
 
 //fonction interne
 

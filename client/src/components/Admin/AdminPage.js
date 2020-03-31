@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Row, Col, Grid } from "react-bootstrap";
 import Navbar from '../../components/Navbar';
 import ReactDOM from 'react-dom';
+import Storage from "../../utils/Storage";
+
 
 
 import API from "../../utils/API";
@@ -62,6 +64,14 @@ export class AdminPage extends React.Component {
 
   deletePost = async (post) => {
     await API.deletePost(post._id);
+    this.loadAllPost();
+  };
+
+  deleteImage = async (post) => {
+    const { data } = await API.deleteImage(post._id);
+    if(data.text == "Photo suprimmé"){
+      Storage.deleteImage(post.imageUrl);
+    }
     this.loadAllPost();
   };
 
@@ -245,7 +255,9 @@ export class AdminPage extends React.Component {
                                 <button type="button" class="btn btn-default btn-sm btn-danger" onClick={() => this.deletePost(element)}>
                                   <span class="glyphicon glyphicon-exclamation-sign"></span> Supprimer !
                                 </button>
-                              
+                                <button type="button" class="btn btn-default btn-sm btn-danger" onClick={() => this.deleteImage(element)}>
+                                  <span class="glyphicon glyphicon-exclamation-sign"></span> Supprimer la photo !
+                                </button>
                               
                               
                             </div>

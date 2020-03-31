@@ -43,21 +43,12 @@ async function create(req, res) {
 
 
   async function getAllCategorie(req, res) {
-    const { token } = req.params;
-    const user = jwt.decode(token, config.secret);
-    if(user.isAdmin){
       try {
         var allCategorie = await Categorie.find();
         return res.status(200).json(allCategorie);
       } catch (error) {
         return res.status(500).json({ text: "La requête a echoué" });
       }
-    }
-    else{
-      return res.status(401).json({ text: "Vous n'êtes pas autorisé" });
-    }
-    
-    
   }
 
 

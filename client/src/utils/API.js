@@ -201,6 +201,10 @@ export default {
     const token = localStorage.getItem("token");
     return axios.get(`${burl}/post/get/getAllMyPosts/`+token, { headers: headers });
   },
+  
+  getAllCategorie: function() {
+    return axios.get(`${burl}/categorie/get/allCategorie`, { headers: headers });
+  },
 
 
   //Parti Admin
@@ -252,11 +256,6 @@ export default {
         token: token },
       headers: headers 
     });
-  },
-  
-  getAllCategorie: function() {
-    const token = localStorage.getItem("token");
-    return axios.get(`${burl}/categorie/get/allCategorie/`+token, { headers: headers });
   },
 
   createCategorie: function(send) {

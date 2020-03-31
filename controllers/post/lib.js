@@ -93,8 +93,16 @@ async function create(req, res) {
             post.description = description;
             post.libelle = libelle;
             post.categorie = categorie;
-            if(imageUrl){
+            if(imageUrl){ // le cas ou on enregistre une image
               post.imageUrl = imageUrl;
+            }
+            else{
+              // si non deux cas : 
+              // 1 : il n'y a jamais eu d'image => rien a faire 
+              // 2 : il y a une image d'enregistré => on la supprime
+              if(post.imageUrl){ // cas 2
+                post.imageUrl = undefined;
+              }
             }
             await post.save();
             return res.status(200).json({

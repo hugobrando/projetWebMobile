@@ -15,7 +15,8 @@ export class CreatePost extends React.Component {
       libelle: "",
       categorie: "",
       allCategorie: [],
-      firebaseImage: null
+      firebaseImage: null,
+      wait: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -32,10 +33,12 @@ export class CreatePost extends React.Component {
   };
 
   uploadImage= async (e) => {
+    // mise en chargement => on ne pourra pas poster tant que la photo n'a pas été chargé
     ReactDOM.render(
       React.createElement('div', {}, <p className="text-success">L'image est en cours de traitement ...</p>),
       document.getElementById("chargementImage")
     )
+    this.setState({wait: true});
 
     let currentImageName = "firebase-image-"+ localStorage.getItem("_id")+ "-" + Date.now();
 
@@ -52,7 +55,8 @@ export class CreatePost extends React.Component {
           Storage.getUrlImage(currentImageName).then(url => {
 
           this.setState({
-            firebaseImage: url
+            firebaseImage: url,
+            wait: false
           });
           alert("L'image a était enregistré");
           ReactDOM.render(
@@ -65,7 +69,7 @@ export class CreatePost extends React.Component {
   }
   
   send = async () => {
-    const { description, libelle, categorie, firebaseImage } = this.state;
+    const { description, libelle, categorie, firebaseImage, wait } = this.state;
     var valide = true;
     if (!description || description.length === 0){
       ReactDOM.render(
@@ -90,7 +94,7 @@ export class CreatePost extends React.Component {
       valide = false;
     }
     
-    if(valide){
+    if(valide && !wait){
       try {
         const token = localStorage.getItem("token")
         if(firebaseImage){
@@ -104,6 +108,14 @@ export class CreatePost extends React.Component {
         console.error(error);
         ReactDOM.render(
           React.createElement('div', {}, <p className="error"> {error.response.data.text} !</p>),
+          document.getElementById("errorSubmit")
+        )
+      }
+    }
+    else{
+      if(wait){
+        ReactDOM.render(
+          React.createElement('div', {}, <p className="error"> La photo n'a pas fini de charger !</p>),
           document.getElementById("errorSubmit")
         )
       }

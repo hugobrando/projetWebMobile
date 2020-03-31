@@ -31,7 +31,8 @@ export class ShowPost extends React.Component {
     reponses: [],
     selectLike: "0",
     allCategorie: [],
-    wait: false
+    wait: false,
+    deleteImage : false
     };
     this.loadPost = this.loadPost.bind(this);
     this.owner = this.owner.bind(this);
@@ -40,6 +41,7 @@ export class ShowPost extends React.Component {
     this.filterPost = this.filterPost.bind(this);
     this.loadAllCategorie = this.loadAllCategorie.bind(this);
     this.uploadImage = this.uploadImage.bind(this);
+    this.deleteImage = this.deleteImage.bind(this);
 
 
 
@@ -57,11 +59,11 @@ export class ShowPost extends React.Component {
       this.setState({
         post: res.data
       });
-
+      
       if(res.data.imageUrl){
         ReactDOM.render(
           React.createElement('div', {}, 
-          <img src={this.state.post.imageUrl} alt="upload-image" className="process__image img-responsive center-block" />    
+          <img id="postImage" src={this.state.post.imageUrl} alt="upload-image" className="process__image img-responsive center-block" />    
           ),
           document.getElementById("image")
         );
@@ -213,13 +215,31 @@ export class ShowPost extends React.Component {
 
   owner = async () => {
     if(this.state.post.userId._id == localStorage.getItem("_id")){
-      ReactDOM.render(
-        React.createElement('div', {}, 
-        <button type="button" class="btn btn-default btn-sm btn-info" onClick={() => this.updatePostView()}>
-            <span class="glyphicon glyphicon-exclamation-sign"></span> Modifier !
-        </button>),
-        document.getElementById("owner")
-      );
+      if(this.state.post.imageUrl){
+        ReactDOM.render(
+          React.createElement('div', {}, 
+          <React.Fragment>
+            <button type="button" class="btn btn-default btn-sm btn-info" onClick={() => this.updatePostView()}>
+                <span class="glyphicon glyphicon-exclamation-sign"></span> Modifier !
+            </button>
+            <button type="button" class="btn btn-default btn-sm btn-danger" onClick={() => this.deleteImage()}>
+              <span class="glyphicon glyphicon-exclamation-sign"></span> Supprimer la photo !
+            </button>
+          </React.Fragment>),
+          document.getElementById("owner")
+        );
+      }
+      else{
+        ReactDOM.render(
+          React.createElement('div', {}, 
+            <button type="button" class="btn btn-default btn-sm btn-info" onClick={() => this.updatePostView()}>
+                <span class="glyphicon glyphicon-exclamation-sign"></span> Modifier !
+            </button>
+          ),
+          document.getElementById("owner")
+        );
+      }
+
     }
   };
 
@@ -302,6 +322,23 @@ export class ShowPost extends React.Component {
     </div>),
       document.getElementById("owner")
     );
+  };
+
+  deleteImage = async () => {
+    const { post } = this.state
+    const token = localStorage.getItem("token")
+    const postId = post._id;
+    const description = post.description;
+    const libelle = post.libelle;
+    const categorie = post.categorie;
+    const {data} = await API.updatePost({ postId, description, libelle, categorie, token });
+    if(data.text == "Succès"){
+      Storage.deleteImage(this.state.post.imageUrl);
+      alert("L'image a été supprimée !")
+      document.getElementById("postImage").remove();
+      const {id} = this.props.match.params;
+      this.loadPost(id);
+    }
   };
 
   uploadImage= async (e) => {
@@ -397,7 +434,7 @@ export class ShowPost extends React.Component {
           if(data.text == "Succès"){
             const {id} = this.props.match.params;
             this.loadPost(id);
-            if(this.state.oldUrl == this.state.post.imageUrl){
+            if(this.state.oldUrl == this.state.post.imageUrl || this.state.oldUrl == "" || this.state.oldUrl == undefined){
               alert("Le post a bien était modifier !");
             }
             else{
@@ -410,6 +447,12 @@ export class ShowPost extends React.Component {
               
               alert("Le post a bien était modifier ! L'ancienne image a été suppimé.");
             }
+            ReactDOM.render(
+              React.createElement('div', {}, 
+              <img id="postImage" src={post.imageUrl} alt="upload-image" className="process__image img-responsive center-block" />    
+              ),
+              document.getElementById("image")
+            );
           }else{
             ReactDOM.render(
               React.createElement('div', {}, <p className="error"> Erreur de modification !</p>),
@@ -420,17 +463,8 @@ export class ShowPost extends React.Component {
         else{
           const { data } = await API.updatePost({ postId, description, libelle, categorie, token }); 
           if(data.text == "Succès"){
-            ReactDOM.render(
-              React.createElement('div', {}, 
-              <div>
-                <p className="bg-success"> Le post a bien était modifier !</p>
-                <button type="button" class="btn btn-default btn-sm btn-info" onClick={() => this.updatePostView()}>
-                <span class="glyphicon glyphicon-exclamation-sign"></span> Modifier !
-                </button>
-              </div>
-              ),
-              document.getElementById("owner")
-            )
+            alert("Le post a bien était modifier !");
+            this.owner();
           }else{
             ReactDOM.render(
               React.createElement('div', {}, <p className="error"> Erreur de modification !</p>),

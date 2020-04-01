@@ -26,31 +26,56 @@ export class Dashboard extends React.Component {
   
 
   like = async (element) => {
+    
     if(element.like.includes(localStorage.getItem("_id"))){
-      await API.deleteLikePost(element._id);
+      try{
+        await API.deleteLikePost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     else{
-      await API.addLikePost(element._id);
+      try{
+        await API.addLikePost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     this.loadAllPost();
   };
   
   dislike = async (element) => {
     if(element.dislike.includes(localStorage.getItem("_id"))){
-      await API.deleteDislikePost(element._id);
+      try{
+        await API.deleteDislikePost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     else{
-      await API.addDislikePost(element._id);
+      try{
+        await API.addDislikePost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     } 
     this.loadAllPost();
   };
 
   signaler = async (element) => {
     if(element.signalement.includes(localStorage.getItem("_id"))){
-      await API.deleteSignalementPost(element._id);
+      try{
+        await API.deleteSignalementPost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     else{
-      await API.addSignalementPost(element._id);
+      try{
+        await API.addSignalementPost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     } 
     this.loadAllPost();
   };
@@ -145,6 +170,7 @@ export class Dashboard extends React.Component {
                             }}>
                           <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
                         </button>
+                        <div id={"errorButton"+element._id}></div>
                     </div>
                   )
                 }
@@ -191,6 +217,7 @@ export class Dashboard extends React.Component {
                             }}>
                           <span class="glyphicon glyphicon-exclamation-sign"></span> Signaler {element.signalement.length}
                         </button>
+                        <div id={"errorButton"+element._id}></div>
                     </div>
                  ) 
                 }

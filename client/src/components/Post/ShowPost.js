@@ -104,10 +104,18 @@ export class ShowPost extends React.Component {
 
   likePost = async (element) => {
     if(element.like.includes(localStorage.getItem("_id"))){
-      await API.deleteLikePost(element._id);
+      try{
+        await API.deleteLikePost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     else{
-      await API.addLikePost(element._id);
+      try{
+        await API.addLikePost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     const {id} = this.props.match.params;
     this.loadPost(id);
@@ -115,10 +123,18 @@ export class ShowPost extends React.Component {
   
   dislikePost = async (element) => {
     if(element.dislike.includes(localStorage.getItem("_id"))){
-      await API.deleteDislikePost(element._id);
+      try{
+        await API.deleteDislikePost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     else{
-      await API.addDislikePost(element._id);
+      try{
+        await API.addDislikePost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     } 
     const {id} = this.props.match.params;
     this.loadPost(id);
@@ -126,10 +142,18 @@ export class ShowPost extends React.Component {
 
   signalerPost = async (element) => {
     if(element.signalement.includes(localStorage.getItem("_id"))){
-      await API.deleteSignalementPost(element._id);
+      try{
+        await API.deleteSignalementPost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     else{
-      await API.addSignalementPost(element._id);
+      try{
+        await API.addSignalementPost(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     } 
     const {id} = this.props.match.params;
     this.loadPost(id);
@@ -137,10 +161,18 @@ export class ShowPost extends React.Component {
 
   likeReponse = async (element) => {
     if(element.like.includes(localStorage.getItem("_id"))){
-      await API.deleteLikeReponse(element._id);
+      try{
+        await API.deleteLikeReponse(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     else{
-      await API.addLikeReponse(element._id);
+      try{
+        await API.addLikeReponse(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     const {id} = this.props.match.params;
     this.loadReponse(id);
@@ -148,10 +180,18 @@ export class ShowPost extends React.Component {
   
   dislikeReponse = async (element) => {
     if(element.dislike.includes(localStorage.getItem("_id"))){
-      await API.deleteDislikeReponse(element._id);
+      try{
+        await API.deleteDislikeReponse(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     else{
-      await API.addDislikeReponse(element._id);
+      try{
+        await API.addDislikeReponse(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     } 
     const {id} = this.props.match.params;
     this.loadReponse(id);
@@ -159,10 +199,18 @@ export class ShowPost extends React.Component {
 
   signalerReponse = async (element) => {
     if(element.signalement.includes(localStorage.getItem("_id"))){
-      await API.deleteSignalementReponse(element._id);
+      try{
+        await API.deleteSignalementReponse(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     }
     else{
-      await API.addSignalementReponse(element._id);
+      try{
+        await API.addSignalementReponse(element._id);
+      }catch(e){
+        alert(e.response.data.text)
+      }
     } 
     const {id} = this.props.match.params;
     this.loadReponse(id);

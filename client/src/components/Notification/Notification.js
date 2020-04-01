@@ -11,7 +11,8 @@ export class Notification extends React.Component {
     this.state = {
       allNotification: [],
       selectCategorie: "",
-      selectLike: "0"
+      selectLike: "0",
+      selectReponse: "0"
     };
 
     this.filterPost = this.filterPost.bind(this);
@@ -84,7 +85,7 @@ export class Notification extends React.Component {
         <h2>Bonjour {localStorage.getItem("prenom")} {localStorage.getItem("nom")}</h2>
       </div>
       {allNotification.map(element => {
-          if((this.state.selectCategorie == element.postId.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.postId.like.length)){
+          if((this.state.selectCategorie == element.postId.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.postId.like.length) && (this.state.selectReponse <= element.postId.reponses.length)){
             if(!element.vue) {
               return(
               <div class="list-group" >

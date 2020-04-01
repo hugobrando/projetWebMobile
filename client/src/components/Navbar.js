@@ -130,8 +130,9 @@ class Navbar extends React.Component {
     };
 
     cacheCategorie = () => {
-        if(this.props.cacheCategorie){
+        if(this.props.researchForReponse){
             document.getElementById("selectCategorie").remove();
+            document.getElementById("selectReponse").remove();
         }
     };
     
@@ -159,6 +160,15 @@ render() {
                             <option value = "20">+20 likes</option>
                             <option value = "50">+50 likes</option>
                             <option value = "100">+100 likes</option>
+                        </select>
+                        <br/>
+                        <select class="form-control" id="selectReponse"  onChange={this.handleSelect}>
+                            <option value = "0">Tout nombre de réponses</option>
+                            <option value = "5">+5 réponses</option>
+                            <option value = "10">+10 réponses</option>
+                            <option value = "20">+20 réponses</option>
+                            <option value = "50">+50 réponses</option>
+                            <option value = "100">+100 réponses</option>
                         </select>
                         <br/>
                         <select class="form-control" id="selectCategorie" onChange={this.handleSelect}>

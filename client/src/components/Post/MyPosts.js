@@ -11,7 +11,8 @@ export class MyPosts extends React.Component {
     this.state = {
       allPost: [],
       selectCategorie: "",
-      selectLike: "0"
+      selectLike: "0",
+      selectReponse: "0"
     };
 
     this.loadAllMyPosts = this.loadAllMyPosts.bind(this);
@@ -106,7 +107,7 @@ export class MyPosts extends React.Component {
               </Button>
             </div>
             {allPost.map(element => {
-                    if((this.state.selectCategorie == element.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.like.length)){
+                    if((this.state.selectCategorie == element.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.like.length) && (this.state.selectReponse <= element.reponses.length)){
                       if(!element.imageUrl){
                         return(
                           <div class="list-group">

@@ -17,7 +17,8 @@ export class AdminPage extends React.Component {
       allReponse: [],
       selectCategorie: "",
       selectLike: "0",
-      showReponse: false
+      showReponse: false,
+      selectReponse: "0"
     };
 
     this.filterPost = this.filterPost.bind(this);
@@ -201,7 +202,7 @@ export class AdminPage extends React.Component {
           </Button>
         </div>
         {allPost.map(element => {
-                      if((this.state.selectCategorie == element.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.like.length)){
+                      if((this.state.selectCategorie == element.categorie || this.state.selectCategorie == "") && (this.state.selectLike <= element.like.length) && (this.state.selectReponse <= element.reponses.length)){
                         if(!element.imageUrl){
                           return(
                             <div class="list-group">
